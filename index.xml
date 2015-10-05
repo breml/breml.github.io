@@ -60,5 +60,36 @@
 </description>
     </item>
     
+    <item>
+      <title>gogitignore</title>
+      <link>http://blog.bremis.ch/blog/2015/10/06/gogitignore/</link>
+      <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://blog.bremis.ch/blog/2015/10/06/gogitignore/</guid>
+      <description>
+
+&lt;h1 id=&#34;gogitignore:82ed5a67ff3dec1227a0a5d6b8aae203&#34;&gt;gogitignore&lt;/h1&gt;
+
+&lt;p&gt;The other day I extended one of my go (golang) project with some new main packages resulting in new commands. After building the project with &lt;code&gt;go build&lt;/code&gt; the resulting executables are placed in the respective directories within the project. While updating the git repository I found it combersome to add all the new executables to the .gitignore-file. On linux there is unfortunately now easy way to exclude all executables within a project with a single line in .gitignore.&lt;/p&gt;
+
+&lt;p&gt;With go it is easily predictable how the resulting executables from a main package are named. The directory name, containing a main package, will be used as filename for the new command. Hence I hacked some lines of go code to automaticaly update the .gitignore file. The result is the &lt;a href=&#34;https://github.com/breml/gogitignore&#34;&gt;gogitignore&lt;/a&gt;. At the moment it still a bit rough around the edges, but the main idea is allready implemented.&lt;/p&gt;
+
+&lt;h2 id=&#34;usage:82ed5a67ff3dec1227a0a5d6b8aae203&#34;&gt;Usage&lt;/h2&gt;
+
+&lt;p&gt;In the easiest case you may just run &lt;code&gt;gogitignore&lt;/code&gt; in the root directory of your go project. This will add all executables, build from the main packages, automatically as an entry to the .gitignore file in the project root directory. To doublecheck the result gogitignore provides the flag -stdout (or -dryrun).&lt;/p&gt;
+
+&lt;p&gt;For more information about the usage run &lt;code&gt;gogitignore -h&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-dir=&amp;quot;.&amp;quot;: destination directory where .gitignore is located and where to traverse directory tree for go programs.
+-dryrun=false: dryrun, no changes are made
+-exec=false: find all files with executable bit set
+-gomain=true: add executables, resulting from building go main packages
+-h=false: print usage
+-help=false: print usage
+-inplace=false: edit .gitignore in place
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
