@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>breml&#39;s blog</title>
-    <link>http://blog.bremis.ch/</link>
+    <link>https://breml.github.io/</link>
     <description>Recent content on breml&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 06 Oct 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://blog.bremis.ch/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://breml.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>About</title>
-      <link>http://blog.bremis.ch/about/</link>
+      <link>https://breml.github.io/about/</link>
       <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://blog.bremis.ch/about/</guid>
+      <guid>https://breml.github.io/about/</guid>
       <description>
 
 &lt;h2 id=&#34;who-i-am:6083a88ee3411b0d17ce02d738f69d47&#34;&gt;Who I am&lt;/h2&gt;
@@ -30,7 +30,7 @@
 &lt;p&gt;My story with open source software starts during my education, when I did my first steps with &lt;a href=&#34;https://www.kernel.org/&#34;&gt;Linux&lt;/a&gt;, &lt;a href=&#34;https://www.php.net&#34;&gt;PHP&lt;/a&gt; and &lt;a href=&#34;https://www.mysql.com&#34;&gt;MySQL&lt;/a&gt;. My first open source contribution dates back in 1999 where I helped with a small fix to the solaris build of &lt;a href=&#34;http://www.modssl.org/about/credits.html&#34;&gt;mod_ssl&lt;/a&gt;. Ever since I contributed to several open source projects in multiple programming languages like golang, java, php, python and ruby.&lt;/p&gt;
 
 &lt;p&gt;Actually &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt; is my first choice. I realy love the strong typing, fast compile times, static binaries, concurrency, go gettable libraries and the macsot gopher 
-&lt;img class=&#34;emoji smiley&#34; src=&#34;http://blog.bremis.ch/img/emoji-cheat-sheet.com/public/graphics/emojis/smiley.png&#34; /&gt;
+&lt;img class=&#34;emoji smiley&#34; src=&#34;https://breml.github.io/img/emoji-cheat-sheet.com/public/graphics/emojis/smiley.png&#34; /&gt;
 
 .&lt;/p&gt;
 </description>
@@ -38,10 +38,10 @@
     
     <item>
       <title>License</title>
-      <link>http://blog.bremis.ch/license/</link>
+      <link>https://breml.github.io/license/</link>
       <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://blog.bremis.ch/license/</guid>
+      <guid>https://breml.github.io/license/</guid>
       <description>
 
 &lt;p&gt;The content of this website / blog is unless otherwise stated licensed under a &lt;a href=&#34;http://creativecommons.org/licenses/by/4.0/&#34;&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;
@@ -62,10 +62,10 @@
     
     <item>
       <title>gogitignore</title>
-      <link>http://blog.bremis.ch/blog/2015/10/06/gogitignore/</link>
+      <link>https://breml.github.io/blog/2015/10/06/gogitignore/</link>
       <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://blog.bremis.ch/blog/2015/10/06/gogitignore/</guid>
+      <guid>https://breml.github.io/blog/2015/10/06/gogitignore/</guid>
       <description>
 
 &lt;h1 id=&#34;gogitignore:82ed5a67ff3dec1227a0a5d6b8aae203&#34;&gt;gogitignore&lt;/h1&gt;

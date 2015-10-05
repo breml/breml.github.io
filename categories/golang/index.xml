@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Golang on breml&#39;s blog</title>
-    <link>http://blog.bremis.ch/categories/golang/</link>
+    <link>https://breml.github.io/categories/golang/</link>
     <description>Recent content in Golang on breml&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 06 Oct 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://blog.bremis.ch/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://breml.github.io/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>gogitignore</title>
-      <link>http://blog.bremis.ch/blog/2015/10/06/gogitignore/</link>
+      <link>https://breml.github.io/blog/2015/10/06/gogitignore/</link>
       <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://blog.bremis.ch/blog/2015/10/06/gogitignore/</guid>
+      <guid>https://breml.github.io/blog/2015/10/06/gogitignore/</guid>
       <description>
 
 &lt;h1 id=&#34;gogitignore:82ed5a67ff3dec1227a0a5d6b8aae203&#34;&gt;gogitignore&lt;/h1&gt;
