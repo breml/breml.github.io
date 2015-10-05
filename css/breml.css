@@ -1,0 +1,16 @@
+.sidebar .label {
+  background-color: #FFFFFF; /*rgba(255,255,255,.5);*/
+  color: #6a9fb5;
+}
+
+.sidebar .label:hover {
+  background-color: #FFFFFF; /*rgba(255,255,255,.5);*/
+  color: #6a9fb5;
+}
+
+.emoji {
+  width: 24px;
+  height: 24px;
+  display: inline;
+  margin: 0;
+}
