@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>gogitignore &middot; breml</title>
+  <title>Sflow &middot; breml</title>
 
   
   <link rel="stylesheet" href="https://breml.github.io/css/poole.css">
@@ -27,9 +27,9 @@
   
   
   
-  
+  <link href="https://breml.github.io/categories/sflow/index.xml" rel="alternate" type="application/rss+xml" title="breml&#39;s blog &middot; breml" />
 
-  <meta name="description" content="gogitignore, automatically add go main packages executables to .gitignore">
+  <meta name="description" content="Lucas (breml) Bremgartner is blogging about IT stuff.">
   <meta name="keywords" content="Lucas breml Bremgartner blog">
   <link rel="author" href="http://plus.google.com/101218494353589513841">
 </head>
@@ -85,41 +85,18 @@
 
 
 <div class="content container">
-  <div class="post">
-    <h1>gogitignore</h1>
-    <span class="post-date">Oct 6, 2015 
-    
-    <br/>
-    <a class="label" href="https://breml.github.io/categories/golang">golang</a><a class="label" href="https://breml.github.io/categories/gogitignore">gogitignore</a><a class="label" href="https://breml.github.io/categories/git">git</a>
-    </span>
-    
-
-<p>The other day I extended one of my go (golang) project with some new main packages resulting in new commands. After building the project with <code>go build</code> the resulting executables are placed in the respective directories within the project. While updating the git repository I found it combersome to add all the new executables to the .gitignore-file. On linux there is unfortunately now easy way to exclude all executables within a project with a single line in .gitignore.</p>
-
-<p>With go it is easily predictable how the resulting executables from a main package are named. The directory name, containing a main package, will be used as filename for the new command. Hence I hacked some lines of go code to automaticaly update the .gitignore file. The result is the <a href="https://github.com/breml/gogitignore" target="_blank">gogitignore</a>. At the moment it still a bit rough around the edges, but the main idea is allready implemented.</p>
-
-<h2 id="usage:82ed5a67ff3dec1227a0a5d6b8aae203">Usage</h2>
-
-<p>In the easiest case you may just run <code>gogitignore</code> in the root directory of your go project. This will add all executables, build from the main packages, automatically as an entry to the .gitignore file in the project root directory. To doublecheck the result gogitignore provides the flag -stdout (or -dryrun).</p>
-
-<p>For more information about the usage run <code>gogitignore -h</code>:</p>
-
-<pre><code>-dir=&quot;.&quot;: destination directory where .gitignore is located and where to traverse directory tree for go programs.
--dryrun=false: dryrun, no changes are made
--exec=false: find all files with executable bit set
--gomain=true: add executables, resulting from building go main packages
--h=false: print usage
--help=false: print usage
--inplace=false: edit .gitignore in place
-</code></pre>
-
-  </div>
+  <h1 id="title">Sflow</h1>
+  <ul class="posts">
   
+    <li><a href="https://breml.github.io/blog/2015/10/22/dividable-without-remainder/">Dividable without remainder</a>
+    
+    &middot;
+    <a class="label" href="https://breml.github.io/categories/golang">golang</a><a class="label" href="https://breml.github.io/categories/bpf">bpf</a><a class="label" href="https://breml.github.io/categories/sflow">sflow</a>
+    </span>
+    &middot; <time>Oct 22, 2015</time></li>
+  
+  </ul>
 </div>
-
-
-
-
 <script src="https://breml.github.io/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 

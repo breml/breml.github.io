@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Golang on breml&#39;s blog</title>
-    <link>https://breml.github.io/categories/golang/</link>
-    <description>Recent content in Golang on breml&#39;s blog</description>
+    <title>Bpf on breml&#39;s blog</title>
+    <link>https://breml.github.io/categories/bpf/</link>
+    <description>Recent content in Bpf on breml&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 22 Oct 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://breml.github.io/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://breml.github.io/categories/bpf/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Dividable without remainder</title>
@@ -175,35 +175,6 @@ ok  	_/home/lubr/go/src/github.com/breml/zeroremainder	8.439s
 &lt;h2 id=&#34;disclaimer:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;Disclaimer&lt;/h2&gt;
 
 &lt;p&gt;This document is a compilation of observations and empirical studies of the described algorithm and by no means a formal proof.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>gogitignore</title>
-      <link>https://breml.github.io/blog/2015/10/06/gogitignore/</link>
-      <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://breml.github.io/blog/2015/10/06/gogitignore/</guid>
-      <description>
-
-&lt;p&gt;The other day I extended one of my go (golang) project with some new main packages resulting in new commands. After building the project with &lt;code&gt;go build&lt;/code&gt; the resulting executables are placed in the respective directories within the project. While updating the git repository I found it combersome to add all the new executables to the .gitignore-file. On linux there is unfortunately now easy way to exclude all executables within a project with a single line in .gitignore.&lt;/p&gt;
-
-&lt;p&gt;With go it is easily predictable how the resulting executables from a main package are named. The directory name, containing a main package, will be used as filename for the new command. Hence I hacked some lines of go code to automaticaly update the .gitignore file. The result is the &lt;a href=&#34;https://github.com/breml/gogitignore&#34; target=&#34;_blank&#34;&gt;gogitignore&lt;/a&gt;. At the moment it still a bit rough around the edges, but the main idea is allready implemented.&lt;/p&gt;
-
-&lt;h2 id=&#34;usage:82ed5a67ff3dec1227a0a5d6b8aae203&#34;&gt;Usage&lt;/h2&gt;
-
-&lt;p&gt;In the easiest case you may just run &lt;code&gt;gogitignore&lt;/code&gt; in the root directory of your go project. This will add all executables, build from the main packages, automatically as an entry to the .gitignore file in the project root directory. To doublecheck the result gogitignore provides the flag -stdout (or -dryrun).&lt;/p&gt;
-
-&lt;p&gt;For more information about the usage run &lt;code&gt;gogitignore -h&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;-dir=&amp;quot;.&amp;quot;: destination directory where .gitignore is located and where to traverse directory tree for go programs.
--dryrun=false: dryrun, no changes are made
--exec=false: find all files with executable bit set
--gomain=true: add executables, resulting from building go main packages
--h=false: print usage
--help=false: print usage
--inplace=false: edit .gitignore in place
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

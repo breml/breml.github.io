@@ -14,3 +14,11 @@
   display: inline;
   margin: 0;
 }
+
+.language-plain {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #000 none repeat scroll 0% 0%;
+  color: #F8F8F8;
+}
