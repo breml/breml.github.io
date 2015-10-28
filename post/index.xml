@@ -21,14 +21,14 @@
 
 &lt;h3 id=&#34;problem:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;Problem&lt;/h3&gt;
 
-&lt;p&gt;For a &amp;ldquo;1 in n sampling&amp;rdquo; problem I was looking for a fast way to determine, if a value &lt;em&gt;x&lt;/em&gt; (random number) is dividable by a previously known divisor &lt;em&gt;d&lt;/em&gt; (sampling rate) without remainder. So the algorithm has to result with &lt;em&gt;true&lt;/em&gt; in &lt;em&gt;1&lt;/em&gt; of &lt;em&gt;d&lt;/em&gt; cases, otherwise with &lt;em&gt;false&lt;/em&gt;. &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;d&lt;/em&gt; are both unsigned integers, in my case 32 bit long. Since the algorithm will be used for sampling and &lt;em&gt;x&lt;/em&gt; is produced by a random number generator (see below: Motivation), a slight inaccuracy (&amp;lt; 0.01%) may be tolerable. The usual range for &lt;em&gt;d&lt;/em&gt; will be whole numbers between 1 and 2000, based on the recomendations for &lt;a href=&#34;http://blog.sflow.com/2009/06/sampling-rates.html&#34; target=&#34;_blank&#34;&gt;sFlow sampling rates&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For a &amp;ldquo;1 in n sampling&amp;rdquo; problem I was looking for a fast way to determine, if a value &lt;em&gt;x&lt;/em&gt; (random number) is dividable by a previously known divisor &lt;em&gt;d&lt;/em&gt; (sampling rate) without remainder. So the algorithm has to result with &lt;em&gt;true&lt;/em&gt; in &lt;em&gt;1&lt;/em&gt; of &lt;em&gt;d&lt;/em&gt; cases, otherwise with &lt;em&gt;false&lt;/em&gt;. &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;d&lt;/em&gt; are both unsigned integers, in my case 32 bit long. Since the algorithm will be used for sampling and &lt;em&gt;x&lt;/em&gt; is produced by a random number generator (see below: Motivation), a slight inaccuracy (&amp;lt; 0.01%) may be tolerable. The usual range for &lt;em&gt;d&lt;/em&gt; will be whole numbers between 1 and 2000, based on the recommendations for &lt;a href=&#34;http://blog.sflow.com/2009/06/sampling-rates.html&#34; target=&#34;_blank&#34;&gt;sFlow sampling rates&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id=&#34;tl-dr-solution:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;tl;dr Solution&lt;/h3&gt;
 
 &lt;p&gt;The obvious solution of course is to use the modulo operation: &lt;code&gt;x % d == 0&lt;/code&gt;. In my special case, the modulo operation is not available, and I therefore had to look for an alternative (for details see: Motivation).&lt;/p&gt;
 
 &lt;p&gt;The proposed solution only works with positive (unsigned) values.&lt;br /&gt;
-&lt;em&gt;d = 0&lt;/em&gt; is not allowed (division by 0); for &lt;em&gt;d = 1&lt;/em&gt;, the result is allways true.&lt;/p&gt;
+&lt;em&gt;d = 0&lt;/em&gt; is not allowed (division by 0); for &lt;em&gt;d = 1&lt;/em&gt;, the result is always true.&lt;/p&gt;
 
 &lt;p&gt;If &lt;em&gt;d&lt;/em&gt; is a power of 2 (e.g. 4, 8, 16), the result is determined with &lt;code&gt;x &amp;amp; (d - 1) == 0&lt;/code&gt;. If true, there is no remainder.&lt;/p&gt;
 
@@ -51,7 +51,7 @@ where the division is an integer division, where the result is round down.&lt;br
 
 &lt;h2 id=&#34;motivation:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;Motivation&lt;/h2&gt;
 
-&lt;p&gt;I am working on a tool, to sample network packets at arbitary sampling rate (normally between 1 and 2000), as proposed by &lt;a href=&#34;http://www.sflow.org&#34; target=&#34;_blank&#34;&gt;sFlow&lt;/a&gt;). My implementation is based on &lt;a href=&#34;https://github.com/google/gopacket&#34; target=&#34;_blank&#34;&gt;gopacket&lt;/a&gt;, which uses libpcap, the same library used by &lt;a href=&#34;http://www.tcpdump.org/&#34; target=&#34;_blank&#34;&gt;tcpdump&lt;/a&gt;. One of my approaches for the sampling of the packages is based on &lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/filter.txt&#34; target=&#34;_blank&#34;&gt;BPF (Berkeley Packet Filter)&lt;/a&gt;, which allows to filter the captured packets in the kernel. The assumption is that filtering in kernel mode should be faster, because there are less context switches and memory copy operations necessary. BPF allows to call the &lt;em&gt;prandom&lt;/em&gt; interface of the kernel to get a random uint32 number. One way to decide, if the current packet should be sampled, is to use the &lt;a href=&#34;https://en.wikipedia.org/wiki/Modulo_operation&#34; target=&#34;_blank&#34;&gt;modulo&lt;/a&gt; operation; random number modulo sampling rate. If the remainder is 0, the packet is sampled, otherwise the packet is ignored.&lt;/p&gt;
+&lt;p&gt;I am working on a tool, to sample network packets at arbitrary sampling rate (normally between 1 and 2000), as proposed by &lt;a href=&#34;http://www.sflow.org&#34; target=&#34;_blank&#34;&gt;sFlow&lt;/a&gt;). My implementation is based on &lt;a href=&#34;https://github.com/google/gopacket&#34; target=&#34;_blank&#34;&gt;gopacket&lt;/a&gt;, which uses libpcap, the same library used by &lt;a href=&#34;http://www.tcpdump.org/&#34; target=&#34;_blank&#34;&gt;tcpdump&lt;/a&gt;. One of my approaches for the sampling of the packages is based on &lt;a href=&#34;https://www.kernel.org/doc/Documentation/networking/filter.txt&#34; target=&#34;_blank&#34;&gt;BPF (Berkeley Packet Filter)&lt;/a&gt;, which allows to filter the captured packets in the kernel. The assumption is that filtering in kernel mode should be faster, because there are less context switches and memory copy operations necessary. BPF allows to call the &lt;em&gt;prandom&lt;/em&gt; interface of the kernel to get a random uint32 number. One way to decide, if the current packet should be sampled, is to use the &lt;a href=&#34;https://en.wikipedia.org/wiki/Modulo_operation&#34; target=&#34;_blank&#34;&gt;modulo&lt;/a&gt; operation; random number modulo sampling rate. If the remainder is 0, the packet is sampled, otherwise the packet is ignored.&lt;/p&gt;
 
 &lt;p&gt;Although BPF assembler does provide a modulo instruction, I do not want to use this instruction because of two reasons:&lt;/p&gt;
 
@@ -71,16 +71,16 @@ where the division is an integer division, where the result is round down.&lt;br
 &lt;h3 id=&#34;preconditions:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;Preconditions&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;We only work with unsigned integers, where the &lt;em&gt;size&lt;/em&gt; of the integer is a multiple of 8 (bits), normaly one of 8, 16, 32, 64 (depending on data type and architecture)&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;maxuint&lt;/em&gt; is definded as: &lt;code&gt;maxuint = 2^size - 1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;We only work with unsigned integers, where the &lt;em&gt;size&lt;/em&gt; of the integer is a multiple of 8 (bits), normally one of 8, 16, 32, 64 (depending on data type and architecture)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;maxuint&lt;/em&gt; is defined as: &lt;code&gt;maxuint = 2^size - 1&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;The divisor &lt;em&gt;d&lt;/em&gt; must not be &lt;em&gt;0&lt;/em&gt; (would lead to division by 0 error)&lt;/li&gt;
-&lt;li&gt;If &lt;em&gt;d&lt;/em&gt; is &lt;em&gt;1&lt;/em&gt;, no calculation is performed, the result is allways &lt;em&gt;true&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;If &lt;em&gt;d&lt;/em&gt; is &lt;em&gt;1&lt;/em&gt;, no calculation is performed, the result is always &lt;em&gt;true&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;The dividend &lt;em&gt;x&lt;/em&gt; may be any number in the range from &lt;em&gt;0&lt;/em&gt; to &lt;em&gt;maxuint&lt;/em&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;d-beeing-a-power-of-2:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;&lt;strong&gt;d&lt;/strong&gt; beeing a power of 2&lt;/h3&gt;
+&lt;h3 id=&#34;d-being-a-power-of-2:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;&lt;strong&gt;d&lt;/strong&gt; being a power of 2&lt;/h3&gt;
 
-&lt;p&gt;This part of the solution is straightforward. If &lt;em&gt;d&lt;/em&gt; is a power of 2 (e.g. 4, 8, 16), the modulo could by determinded with a simple &lt;em&gt;and&lt;/em&gt; operation, &lt;code&gt;x &amp;amp; (d - 1) == 0&lt;/code&gt;. The result of a bitwise &lt;em&gt;and&lt;/em&gt;-operation of &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;d - 1&lt;/em&gt; is the remainder. Therefore if the result is 0, there is no remainder and the equation is &lt;em&gt;true&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;This part of the solution is straightforward. If &lt;em&gt;d&lt;/em&gt; is a power of 2 (e.g. 4, 8, 16), the modulo could by determined with a simple &lt;em&gt;and&lt;/em&gt; operation, &lt;code&gt;x &amp;amp; (d - 1) == 0&lt;/code&gt;. The result of a bitwise &lt;em&gt;and&lt;/em&gt;-operation of &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;d - 1&lt;/em&gt; is the remainder. Therefore if the result is 0, there is no remainder and the equation is &lt;em&gt;true&lt;/em&gt;.&lt;/p&gt;
 
 &lt;h3 id=&#34;multiply-by-reciprocal:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;Multiply by reciprocal&lt;/h3&gt;
 
@@ -93,7 +93,7 @@ where the division is an integer division, where the result is round down.&lt;br
 &lt;p&gt;First we handle some special cases:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;If &lt;em&gt;x == 0&lt;/em&gt; the result is allways &lt;em&gt;true&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;If &lt;em&gt;x == 0&lt;/em&gt; the result is always &lt;em&gt;true&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;If &lt;em&gt;0 &amp;lt; x &amp;lt; d&lt;/em&gt; no calculation is performed as the result has to be false&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -105,24 +105,24 @@ where the division is an integer division, where the result is round down.&lt;br
 &lt;p&gt;The used reciprocal is calculated as rounded up division of &lt;em&gt;maxuint&lt;/em&gt; and &lt;em&gt;d&lt;/em&gt;, the division being an integer division, where the result is round down):&lt;br /&gt;
 &lt;code&gt;reciprocal(d) = maxuint / d + 1&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;One of the first question I asked my self about this equation was, why has &lt;em&gt;x * reciprocal(d)&lt;/em&gt; to be smaller than &lt;em&gt;reciprocal(d)&lt;/em&gt;?  To explain this, let&amp;rsquo;s have a look at an example with &lt;em&gt;d&lt;/em&gt; being a power of 2. We know, if &lt;em&gt;d&lt;/em&gt; is a power of 2, there is a simpler appraoch to determine, if a &lt;em&gt;x&lt;/em&gt; is dividable by &lt;em&gt;d&lt;/em&gt; without remainder, by using the bitwise &lt;em&gt;and&lt;/em&gt;-operation described above.&lt;br /&gt;
-Nevertheless we may use the proposed algorithm. In this case &lt;em&gt;x * reciprocal(d)&lt;/em&gt; will allways result to &lt;em&gt;0&lt;/em&gt;, if &lt;em&gt;x&lt;/em&gt; is dividable by &lt;em&gt;d&lt;/em&gt; without remainder. This works because in this case &lt;em&gt;reciprocal(d)&lt;/em&gt; results in the effective reciprocal value of d, without rounding error. For all other &lt;em&gt;d&lt;/em&gt;, not being a power of 2, &lt;em&gt;reciprocal(d)&lt;/em&gt; is allways a rounded value, with &lt;em&gt;0 &amp;lt; error &amp;lt; 1&lt;/em&gt;.&lt;br /&gt;
+&lt;p&gt;One of the first question I asked my self about this equation was, why has &lt;em&gt;x * reciprocal(d)&lt;/em&gt; to be smaller than &lt;em&gt;reciprocal(d)&lt;/em&gt;?  To explain this, let&amp;rsquo;s have a look at an example with &lt;em&gt;d&lt;/em&gt; being a power of 2. We know, if &lt;em&gt;d&lt;/em&gt; is a power of 2, there is a simpler approach to determine, if a &lt;em&gt;x&lt;/em&gt; is dividable by &lt;em&gt;d&lt;/em&gt; without remainder, by using the bitwise &lt;em&gt;and&lt;/em&gt;-operation described above.&lt;br /&gt;
+Nevertheless we may use the proposed algorithm. In this case &lt;em&gt;x * reciprocal(d)&lt;/em&gt; will always result to &lt;em&gt;0&lt;/em&gt;, if &lt;em&gt;x&lt;/em&gt; is dividable by &lt;em&gt;d&lt;/em&gt; without remainder. This works because in this case &lt;em&gt;reciprocal(d)&lt;/em&gt; results in the effective reciprocal value of d, without rounding error. For all other &lt;em&gt;d&lt;/em&gt;, not being a power of 2, &lt;em&gt;reciprocal(d)&lt;/em&gt; is always a rounded value, with &lt;em&gt;0 &amp;lt; error &amp;lt; 1&lt;/em&gt;.&lt;br /&gt;
 The &lt;em&gt;error&lt;/em&gt; may be calculated as follows:&lt;br /&gt;
 &lt;code&gt;reciprocal(d) - 2^size / d&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;This rounding error is the reason, why &lt;em&gt;x * reciprocal(d)&lt;/em&gt; does not equal to &lt;em&gt;0&lt;/em&gt; if &lt;code&gt;x % d = 0&lt;/code&gt;. The higher &lt;em&gt;x&lt;/em&gt;, the higher the accumulated &lt;em&gt;error&lt;/em&gt; becomes, as the &lt;em&gt;error&lt;/em&gt; is multiplicated by &lt;em&gt;x&lt;/em&gt; as well. Now it becomes clear, there is a point where the accumulated &lt;em&gt;error&lt;/em&gt; even exeeds &lt;em&gt;reciprocal(d)&lt;/em&gt;, which leads to the situation, where &lt;code&gt;x * reciprocal(d) &amp;lt; reciprocal(d)&lt;/code&gt; does not provide the same result as &lt;code&gt;x % d == 0&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This rounding error is the reason, why &lt;em&gt;x * reciprocal(d)&lt;/em&gt; does not equal to &lt;em&gt;0&lt;/em&gt; if &lt;code&gt;x % d = 0&lt;/code&gt;. The higher &lt;em&gt;x&lt;/em&gt;, the higher the accumulated &lt;em&gt;error&lt;/em&gt; becomes, as the &lt;em&gt;error&lt;/em&gt; is multiplied by &lt;em&gt;x&lt;/em&gt; as well. Now it becomes clear, there is a point where the accumulated &lt;em&gt;error&lt;/em&gt; even exceeds &lt;em&gt;reciprocal(d)&lt;/em&gt;, which leads to the situation, where &lt;code&gt;x * reciprocal(d) &amp;lt; reciprocal(d)&lt;/code&gt; does not provide the same result as &lt;code&gt;x % d == 0&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;With &lt;code&gt;(2^size / d) / error&lt;/code&gt; (integer division) the highest &lt;em&gt;x&lt;/em&gt; may be calculated, where the proposed algorithm still provides the same result as &lt;code&gt;x % d = 0&lt;/code&gt;. Unfortunately this buys us nothing, because in my scenario &lt;em&gt;x&lt;/em&gt; may be any number between &lt;em&gt;0&lt;/em&gt; and &lt;em&gt;maxuint&lt;/em&gt;. So the next question arises, what happens there or a little bit bolder: does it matter? The short answer is: no, for my use case it does not matter. Why?&lt;/p&gt;
 
-&lt;p&gt;We could understand the proposed algorithm &lt;code&gt;x * reciprocal(d) &amp;lt; reciprocal(d)&lt;/code&gt; as a kind of sliding window with the size of &lt;em&gt;d&lt;/em&gt;. Because we can not exactly represent the reciprocal of &lt;em&gt;d&lt;/em&gt; as whole number, the sliding window is a little bit bigger than &lt;em&gt;d&lt;/em&gt;. This leads to a difference between the proposed algorithm and the exact calculation, but the proposed algorithm still fulfils the requirement of selecting approximately every nth element (respectively every *d*th).&lt;/p&gt;
+&lt;p&gt;We could understand the proposed algorithm &lt;code&gt;x * reciprocal(d) &amp;lt; reciprocal(d)&lt;/code&gt; as a kind of sliding window with the size of &lt;em&gt;d&lt;/em&gt;. Because we can not exactly represent the reciprocal of &lt;em&gt;d&lt;/em&gt; as whole number, the sliding window is a little bit bigger than &lt;em&gt;d&lt;/em&gt;. This leads to a difference between the proposed algorithm and the exact calculation, but the proposed algorithm still fulfills the requirement of selecting approximately every nth element (respectively every *d*th).&lt;/p&gt;
 
 &lt;h3 id=&#34;applied-verification:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;Applied verification&lt;/h3&gt;
 
-&lt;p&gt;The verify the above statements, I wrote a small programm, called &lt;a href=&#34;https://github.com/breml/zeroremainder&#34; target=&#34;_blank&#34;&gt;zeroremainder&lt;/a&gt; available at Github.&lt;/p&gt;
+&lt;p&gt;The verify the above statements, I wrote a small program, called &lt;a href=&#34;https://github.com/breml/zeroremainder&#34; target=&#34;_blank&#34;&gt;zeroremainder&lt;/a&gt; available at Github.&lt;/p&gt;
 
 &lt;p&gt;This program allows to compare the results of the proposed algorithm with the result of the exact method (modulo operation) and calculate the difference of the results.&lt;/p&gt;
 
-&lt;p&gt;As I am primarily interessted in the results on 32 bit data types and for divisors between 1 and 2000, my applied verification was focused on these parameters, while the &lt;em&gt;zeroremainder&lt;/em&gt; test program does allow to check other number ranges as well.&lt;/p&gt;
+&lt;p&gt;As I am primarily interested in the results on 32 bit data types and for divisors between 1 and 2000, my applied verification was focused on these parameters, while the &lt;em&gt;zeroremainder&lt;/em&gt; test program does allow to check other number ranges as well.&lt;/p&gt;
 
 &lt;h4 id=&#34;results:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;Results&lt;/h4&gt;
 
@@ -166,7 +166,7 @@ ok  	_/home/lubr/go/src/github.com/breml/zeroremainder	8.439s
 
 &lt;h2 id=&#34;the-easiest-solution:3eb9f22aaf4c7f13bcbe99f3ca61c6be&#34;&gt;The easiest solution&lt;/h2&gt;
 
-&lt;p&gt;While working on this solution I became aware of an even easier way to do the sampling by evaluating &lt;code&gt;x &amp;lt; maxuint / d&lt;/code&gt;. The part &lt;em&gt;maxuint / d&lt;/em&gt; may be calculated at initalization (like &lt;em&gt;reciprocal(d)&lt;/em&gt;), where &lt;em&gt;maxuint&lt;/em&gt; is the maximum number generated by the random number generator.&lt;/p&gt;
+&lt;p&gt;While working on this solution I became aware of an even easier way to do the sampling by evaluating &lt;code&gt;x &amp;lt; maxuint / d&lt;/code&gt;. The part &lt;em&gt;maxuint / d&lt;/em&gt; may be calculated at initialization (like &lt;em&gt;reciprocal(d)&lt;/em&gt;), where &lt;em&gt;maxuint&lt;/em&gt; is the maximum number generated by the random number generator.&lt;/p&gt;
 
 &lt;p&gt;With this solution a simple comparison is enough to determine if a packet should be sampled or not.&lt;/p&gt;
 

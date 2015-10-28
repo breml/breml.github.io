@@ -98,14 +98,14 @@
 
 <h3 id="problem:3eb9f22aaf4c7f13bcbe99f3ca61c6be">Problem</h3>
 
-<p>For a &ldquo;1 in n sampling&rdquo; problem I was looking for a fast way to determine, if a value <em>x</em> (random number) is dividable by a previously known divisor <em>d</em> (sampling rate) without remainder. So the algorithm has to result with <em>true</em> in <em>1</em> of <em>d</em> cases, otherwise with <em>false</em>. <em>x</em> and <em>d</em> are both unsigned integers, in my case 32 bit long. Since the algorithm will be used for sampling and <em>x</em> is produced by a random number generator (see below: Motivation), a slight inaccuracy (&lt; 0.01%) may be tolerable. The usual range for <em>d</em> will be whole numbers between 1 and 2000, based on the recomendations for <a href="http://blog.sflow.com/2009/06/sampling-rates.html" target="_blank">sFlow sampling rates</a>.</p>
+<p>For a &ldquo;1 in n sampling&rdquo; problem I was looking for a fast way to determine, if a value <em>x</em> (random number) is dividable by a previously known divisor <em>d</em> (sampling rate) without remainder. So the algorithm has to result with <em>true</em> in <em>1</em> of <em>d</em> cases, otherwise with <em>false</em>. <em>x</em> and <em>d</em> are both unsigned integers, in my case 32 bit long. Since the algorithm will be used for sampling and <em>x</em> is produced by a random number generator (see below: Motivation), a slight inaccuracy (&lt; 0.01%) may be tolerable. The usual range for <em>d</em> will be whole numbers between 1 and 2000, based on the recommendations for <a href="http://blog.sflow.com/2009/06/sampling-rates.html" target="_blank">sFlow sampling rates</a>.</p>
 
 <h3 id="tl-dr-solution:3eb9f22aaf4c7f13bcbe99f3ca61c6be">tl;dr Solution</h3>
 
 <p>The obvious solution of course is to use the modulo operation: <code>x % d == 0</code>. In my special case, the modulo operation is not available, and I therefore had to look for an alternative (for details see: Motivation).</p>
 
 <p>The proposed solution only works with positive (unsigned) values.<br />
-<em>d = 0</em> is not allowed (division by 0); for <em>d = 1</em>, the result is allways true.</p>
+<em>d = 0</em> is not allowed (division by 0); for <em>d = 1</em>, the result is always true.</p>
 
 <p>If <em>d</em> is a power of 2 (e.g. 4, 8, 16), the result is determined with <code>x &amp; (d - 1) == 0</code>. If true, there is no remainder.</p>
 
@@ -128,7 +128,7 @@ where the division is an integer division, where the result is round down.<br />
 
 <h2 id="motivation:3eb9f22aaf4c7f13bcbe99f3ca61c6be">Motivation</h2>
 
-<p>I am working on a tool, to sample network packets at arbitary sampling rate (normally between 1 and 2000), as proposed by <a href="http://www.sflow.org" target="_blank">sFlow</a>). My implementation is based on <a href="https://github.com/google/gopacket" target="_blank">gopacket</a>, which uses libpcap, the same library used by <a href="http://www.tcpdump.org/" target="_blank">tcpdump</a>. One of my approaches for the sampling of the packages is based on <a href="https://www.kernel.org/doc/Documentation/networking/filter.txt" target="_blank">BPF (Berkeley Packet Filter)</a>, which allows to filter the captured packets in the kernel. The assumption is that filtering in kernel mode should be faster, because there are less context switches and memory copy operations necessary. BPF allows to call the <em>prandom</em> interface of the kernel to get a random uint32 number. One way to decide, if the current packet should be sampled, is to use the <a href="https://en.wikipedia.org/wiki/Modulo_operation" target="_blank">modulo</a> operation; random number modulo sampling rate. If the remainder is 0, the packet is sampled, otherwise the packet is ignored.</p>
+<p>I am working on a tool, to sample network packets at arbitrary sampling rate (normally between 1 and 2000), as proposed by <a href="http://www.sflow.org" target="_blank">sFlow</a>). My implementation is based on <a href="https://github.com/google/gopacket" target="_blank">gopacket</a>, which uses libpcap, the same library used by <a href="http://www.tcpdump.org/" target="_blank">tcpdump</a>. One of my approaches for the sampling of the packages is based on <a href="https://www.kernel.org/doc/Documentation/networking/filter.txt" target="_blank">BPF (Berkeley Packet Filter)</a>, which allows to filter the captured packets in the kernel. The assumption is that filtering in kernel mode should be faster, because there are less context switches and memory copy operations necessary. BPF allows to call the <em>prandom</em> interface of the kernel to get a random uint32 number. One way to decide, if the current packet should be sampled, is to use the <a href="https://en.wikipedia.org/wiki/Modulo_operation" target="_blank">modulo</a> operation; random number modulo sampling rate. If the remainder is 0, the packet is sampled, otherwise the packet is ignored.</p>
 
 <p>Although BPF assembler does provide a modulo instruction, I do not want to use this instruction because of two reasons:</p>
 
@@ -148,16 +148,16 @@ where the division is an integer division, where the result is round down.<br />
 <h3 id="preconditions:3eb9f22aaf4c7f13bcbe99f3ca61c6be">Preconditions</h3>
 
 <ul>
-<li>We only work with unsigned integers, where the <em>size</em> of the integer is a multiple of 8 (bits), normaly one of 8, 16, 32, 64 (depending on data type and architecture)</li>
-<li><em>maxuint</em> is definded as: <code>maxuint = 2^size - 1</code></li>
+<li>We only work with unsigned integers, where the <em>size</em> of the integer is a multiple of 8 (bits), normally one of 8, 16, 32, 64 (depending on data type and architecture)</li>
+<li><em>maxuint</em> is defined as: <code>maxuint = 2^size - 1</code></li>
 <li>The divisor <em>d</em> must not be <em>0</em> (would lead to division by 0 error)</li>
-<li>If <em>d</em> is <em>1</em>, no calculation is performed, the result is allways <em>true</em></li>
+<li>If <em>d</em> is <em>1</em>, no calculation is performed, the result is always <em>true</em></li>
 <li>The dividend <em>x</em> may be any number in the range from <em>0</em> to <em>maxuint</em></li>
 </ul>
 
-<h3 id="d-beeing-a-power-of-2:3eb9f22aaf4c7f13bcbe99f3ca61c6be"><strong>d</strong> beeing a power of 2</h3>
+<h3 id="d-being-a-power-of-2:3eb9f22aaf4c7f13bcbe99f3ca61c6be"><strong>d</strong> being a power of 2</h3>
 
-<p>This part of the solution is straightforward. If <em>d</em> is a power of 2 (e.g. 4, 8, 16), the modulo could by determinded with a simple <em>and</em> operation, <code>x &amp; (d - 1) == 0</code>. The result of a bitwise <em>and</em>-operation of <em>x</em> and <em>d - 1</em> is the remainder. Therefore if the result is 0, there is no remainder and the equation is <em>true</em>.</p>
+<p>This part of the solution is straightforward. If <em>d</em> is a power of 2 (e.g. 4, 8, 16), the modulo could by determined with a simple <em>and</em> operation, <code>x &amp; (d - 1) == 0</code>. The result of a bitwise <em>and</em>-operation of <em>x</em> and <em>d - 1</em> is the remainder. Therefore if the result is 0, there is no remainder and the equation is <em>true</em>.</p>
 
 <h3 id="multiply-by-reciprocal:3eb9f22aaf4c7f13bcbe99f3ca61c6be">Multiply by reciprocal</h3>
 
@@ -170,7 +170,7 @@ where the division is an integer division, where the result is round down.<br />
 <p>First we handle some special cases:</p>
 
 <ul>
-<li>If <em>x == 0</em> the result is allways <em>true</em></li>
+<li>If <em>x == 0</em> the result is always <em>true</em></li>
 <li>If <em>0 &lt; x &lt; d</em> no calculation is performed as the result has to be false</li>
 </ul>
 
@@ -182,24 +182,24 @@ where the division is an integer division, where the result is round down.<br />
 <p>The used reciprocal is calculated as rounded up division of <em>maxuint</em> and <em>d</em>, the division being an integer division, where the result is round down):<br />
 <code>reciprocal(d) = maxuint / d + 1</code></p>
 
-<p>One of the first question I asked my self about this equation was, why has <em>x * reciprocal(d)</em> to be smaller than <em>reciprocal(d)</em>?  To explain this, let&rsquo;s have a look at an example with <em>d</em> being a power of 2. We know, if <em>d</em> is a power of 2, there is a simpler appraoch to determine, if a <em>x</em> is dividable by <em>d</em> without remainder, by using the bitwise <em>and</em>-operation described above.<br />
-Nevertheless we may use the proposed algorithm. In this case <em>x * reciprocal(d)</em> will allways result to <em>0</em>, if <em>x</em> is dividable by <em>d</em> without remainder. This works because in this case <em>reciprocal(d)</em> results in the effective reciprocal value of d, without rounding error. For all other <em>d</em>, not being a power of 2, <em>reciprocal(d)</em> is allways a rounded value, with <em>0 &lt; error &lt; 1</em>.<br />
+<p>One of the first question I asked my self about this equation was, why has <em>x * reciprocal(d)</em> to be smaller than <em>reciprocal(d)</em>?  To explain this, let&rsquo;s have a look at an example with <em>d</em> being a power of 2. We know, if <em>d</em> is a power of 2, there is a simpler approach to determine, if a <em>x</em> is dividable by <em>d</em> without remainder, by using the bitwise <em>and</em>-operation described above.<br />
+Nevertheless we may use the proposed algorithm. In this case <em>x * reciprocal(d)</em> will always result to <em>0</em>, if <em>x</em> is dividable by <em>d</em> without remainder. This works because in this case <em>reciprocal(d)</em> results in the effective reciprocal value of d, without rounding error. For all other <em>d</em>, not being a power of 2, <em>reciprocal(d)</em> is always a rounded value, with <em>0 &lt; error &lt; 1</em>.<br />
 The <em>error</em> may be calculated as follows:<br />
 <code>reciprocal(d) - 2^size / d</code></p>
 
-<p>This rounding error is the reason, why <em>x * reciprocal(d)</em> does not equal to <em>0</em> if <code>x % d = 0</code>. The higher <em>x</em>, the higher the accumulated <em>error</em> becomes, as the <em>error</em> is multiplicated by <em>x</em> as well. Now it becomes clear, there is a point where the accumulated <em>error</em> even exeeds <em>reciprocal(d)</em>, which leads to the situation, where <code>x * reciprocal(d) &lt; reciprocal(d)</code> does not provide the same result as <code>x % d == 0</code>.</p>
+<p>This rounding error is the reason, why <em>x * reciprocal(d)</em> does not equal to <em>0</em> if <code>x % d = 0</code>. The higher <em>x</em>, the higher the accumulated <em>error</em> becomes, as the <em>error</em> is multiplied by <em>x</em> as well. Now it becomes clear, there is a point where the accumulated <em>error</em> even exceeds <em>reciprocal(d)</em>, which leads to the situation, where <code>x * reciprocal(d) &lt; reciprocal(d)</code> does not provide the same result as <code>x % d == 0</code>.</p>
 
 <p>With <code>(2^size / d) / error</code> (integer division) the highest <em>x</em> may be calculated, where the proposed algorithm still provides the same result as <code>x % d = 0</code>. Unfortunately this buys us nothing, because in my scenario <em>x</em> may be any number between <em>0</em> and <em>maxuint</em>. So the next question arises, what happens there or a little bit bolder: does it matter? The short answer is: no, for my use case it does not matter. Why?</p>
 
-<p>We could understand the proposed algorithm <code>x * reciprocal(d) &lt; reciprocal(d)</code> as a kind of sliding window with the size of <em>d</em>. Because we can not exactly represent the reciprocal of <em>d</em> as whole number, the sliding window is a little bit bigger than <em>d</em>. This leads to a difference between the proposed algorithm and the exact calculation, but the proposed algorithm still fulfils the requirement of selecting approximately every nth element (respectively every *d*th).</p>
+<p>We could understand the proposed algorithm <code>x * reciprocal(d) &lt; reciprocal(d)</code> as a kind of sliding window with the size of <em>d</em>. Because we can not exactly represent the reciprocal of <em>d</em> as whole number, the sliding window is a little bit bigger than <em>d</em>. This leads to a difference between the proposed algorithm and the exact calculation, but the proposed algorithm still fulfills the requirement of selecting approximately every nth element (respectively every *d*th).</p>
 
 <h3 id="applied-verification:3eb9f22aaf4c7f13bcbe99f3ca61c6be">Applied verification</h3>
 
-<p>The verify the above statements, I wrote a small programm, called <a href="https://github.com/breml/zeroremainder" target="_blank">zeroremainder</a> available at Github.</p>
+<p>The verify the above statements, I wrote a small program, called <a href="https://github.com/breml/zeroremainder" target="_blank">zeroremainder</a> available at Github.</p>
 
 <p>This program allows to compare the results of the proposed algorithm with the result of the exact method (modulo operation) and calculate the difference of the results.</p>
 
-<p>As I am primarily interessted in the results on 32 bit data types and for divisors between 1 and 2000, my applied verification was focused on these parameters, while the <em>zeroremainder</em> test program does allow to check other number ranges as well.</p>
+<p>As I am primarily interested in the results on 32 bit data types and for divisors between 1 and 2000, my applied verification was focused on these parameters, while the <em>zeroremainder</em> test program does allow to check other number ranges as well.</p>
 
 <h4 id="results:3eb9f22aaf4c7f13bcbe99f3ca61c6be">Results</h4>
 
@@ -243,7 +243,7 @@ ok  	_/home/lubr/go/src/github.com/breml/zeroremainder	8.439s
 
 <h2 id="the-easiest-solution:3eb9f22aaf4c7f13bcbe99f3ca61c6be">The easiest solution</h2>
 
-<p>While working on this solution I became aware of an even easier way to do the sampling by evaluating <code>x &lt; maxuint / d</code>. The part <em>maxuint / d</em> may be calculated at initalization (like <em>reciprocal(d)</em>), where <em>maxuint</em> is the maximum number generated by the random number generator.</p>
+<p>While working on this solution I became aware of an even easier way to do the sampling by evaluating <code>x &lt; maxuint / d</code>. The part <em>maxuint / d</em> may be calculated at initialization (like <em>reciprocal(d)</em>), where <em>maxuint</em> is the maximum number generated by the random number generator.</p>
 
 <p>With this solution a simple comparison is enough to determine if a packet should be sampled or not.</p>
 
