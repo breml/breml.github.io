@@ -94,13 +94,13 @@
     </span>
     
 
-<p>The other day I extended one of my go (golang) project with some new main packages resulting in new commands. After building the project with <code>go build</code> the resulting executables are placed in the respective directories within the project. While updating the git repository I found it combersome to add all the new executables to the .gitignore-file. On linux there is unfortunately now easy way to exclude all executables within a project with a single line in .gitignore.</p>
+<p>The other day I extended one of my go (golang) project with some new main packages resulting in new commands. After building the project with <code>go build</code> the resulting executables are placed in the respective directories within the project. While updating the git repository I found it cumbersome to add all the new executables to the .gitignore-file. On linux there is unfortunately now easy way to exclude all executables within a project with a single line in .gitignore.</p>
 
-<p>With go it is easily predictable how the resulting executables from a main package are named. The directory name, containing a main package, will be used as filename for the new command. Hence I hacked some lines of go code to automaticaly update the .gitignore file. The result is the <a href="https://github.com/breml/gogitignore" target="_blank">gogitignore</a>. At the moment it still a bit rough around the edges, but the main idea is allready implemented.</p>
+<p>With go it is easily predictable how the resulting executables from a main package are named. The directory name, containing a main package, will be used as filename for the new command. Hence I hacked some lines of go code to automatically update the .gitignore file. The result is the <a href="https://github.com/breml/gogitignore" target="_blank">gogitignore</a>. At the moment it still a bit rough around the edges, but the main idea is already implemented.</p>
 
 <h2 id="usage:82ed5a67ff3dec1227a0a5d6b8aae203">Usage</h2>
 
-<p>In the easiest case you may just run <code>gogitignore</code> in the root directory of your go project. This will add all executables, build from the main packages, automatically as an entry to the .gitignore file in the project root directory. To doublecheck the result gogitignore provides the flag -stdout (or -dryrun).</p>
+<p>In the easiest case you may just run <code>gogitignore</code> in the root directory of your go project. This will add all executables, build from the main packages, automatically as an entry to the .gitignore file in the project root directory. To double check the result gogitignore provides the flag -stdout (or -dryrun).</p>
 
 <p>For more information about the usage run <code>gogitignore -h</code>:</p>
 
