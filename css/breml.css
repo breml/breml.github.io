@@ -1,3 +1,8 @@
+.sidebar-sticky {
+  top: 1em;
+  bottom: auto;
+}
+
 .sidebar .label {
   background-color: #FFFFFF; /*rgba(255,255,255,.5);*/
   color: #6a9fb5;
