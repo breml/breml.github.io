@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Elasticsearch on breml&#39;s blog</title>
+    <link>https://breml.github.io/categories/elasticsearch/</link>
+    <description>Recent content in Elasticsearch on breml&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 28 Oct 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://breml.github.io/categories/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Tagging of dynamically added Fields in Elasticsearch</title>
+      <link>https://breml.github.io/blog/2015/10/28/tagging-of-dynamically-added-fields-in-elasticsearch/</link>
+      <pubDate>Wed, 28 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://breml.github.io/blog/2015/10/28/tagging-of-dynamically-added-fields-in-elasticsearch/</guid>
+      <description>
+
+&lt;p&gt;At work we use the ELK Stack (Elasticsearch, Logstash and Kibana) to process, store and visualize all kind of log data. To get the most out of the information stored in Elasticsearch, we maintain a handcrafted Elasticsearch mapping.&lt;/p&gt;
+
+&lt;p&gt;As we are in the process of continuously adding more and more log sources, now and then our Elasticsearch mapping is not complete. In this case the dynamic mapping feature of Elasticsearch adds these new fields by it&amp;rsquo;s own.&lt;/p&gt;
+
+&lt;p&gt;As we want to keep our Elasticsearch mapping up to date we have been looking for an easy way to identify all the new fields dynamically added.&lt;/p&gt;
+
+&lt;h2 id=&#34;naive-approach:21bceea47ef0daa27dbdfefe21d795ad&#34;&gt;Naive approach&lt;/h2&gt;
+
+&lt;p&gt;The naive approach to find the differences between our handcrafted mapping and the actual mapping, used by Elasticsearch for the respective index (possibly with dynamically added fields), would be a simple &lt;code&gt;diff&lt;/code&gt; of two text files.&lt;/p&gt;
+
+&lt;p&gt;The handcrafted mapping is stored as a simple JSON-file, which is used by Logstash to apply the mapping when a new index is created.&lt;/p&gt;
+
+&lt;p&gt;The active mapping is accessible via the Elasticsearch API, for example with &lt;code&gt;curl&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -XGET &#39;http://localhost:9200/logstash-2015.10.28/_mapping&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The problem is, these to files are not directly comparable, for the following reasons:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;They are not equally formated (may be corrected by tools like &lt;code&gt;jq&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;They do not necessarily include the same settings for the defined fields, as Elasticsearch does not provide settings, which are set to the default value and our handcrafted mapping may include settings which are the default value&lt;/li&gt;
+&lt;li&gt;The order of the attributes may not necessarily be the same&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So it is obvious a naive &lt;code&gt;diff&lt;/code&gt; of the two files does not lead the goal, even if we ensure the same formating for both files by using a tool like &lt;a href=&#34;https://stedolan.github.io/jq/&#34; target=&#34;_blank&#34;&gt;jq&lt;/a&gt;. Even if we use JSON aware tools to find the differences, like &lt;a href=&#34;http://json-delta.readthedocs.org/en/latest/&#34; target=&#34;_blank&#34;&gt;json-delta&lt;/a&gt;, we do not get the right result as these tools are not able to determine, where field settings are included in the handcrafted mapping file, which are set to the default value.&lt;/p&gt;
+
+&lt;h2 id=&#34;dynamic-field-template-and-custom-field-analyzer:21bceea47ef0daa27dbdfefe21d795ad&#34;&gt;Dynamic field template and custom field analyzer&lt;/h2&gt;
+
+&lt;p&gt;So we looked for an other way to achieve the goal and we came up with the following solution.&lt;/p&gt;
+
+&lt;p&gt;Elasticsearch does provide two features, which combined provide a easy solution to identify all dynamically added fields:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Elasticsearch allows to define the dynamic mapping, which is used, if a certain field is not currently present in the mapping&lt;/li&gt;
+&lt;li&gt;Elasticsearch allows to define custom analyzers, used to analyze the content of a field in a certain way.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What we did is defining a custom analyzer called &lt;em&gt;unknown_field_analyzer&lt;/em&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+  &amp;quot;template&amp;quot; : &amp;quot;logstash-*&amp;quot;,
+  &amp;quot;settings&amp;quot; : {
+    &amp;quot;analysis&amp;quot; : {
+      &amp;quot;analyzer&amp;quot; : {
+        &amp;quot;unknown_field_analyzer&amp;quot; : {
+          &amp;quot;type&amp;quot; : &amp;quot;whitespace&amp;quot;
+        }
+      }
+    }
+  }
+...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(snipped of &lt;em&gt;analyzers&lt;/em&gt; section of the Elasticsearch mapping)&lt;/p&gt;
+
+&lt;p&gt;This analyzer we apply in the definition for the dynamic templates.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+  &amp;quot;dynamic_templates&amp;quot; : [
+    {
+      &amp;quot;string_fields&amp;quot; : {
+        &amp;quot;mapping&amp;quot; : {
+          &amp;quot;index&amp;quot; : &amp;quot;analyzed&amp;quot;,
+          &amp;quot;omit_norms&amp;quot; : true,
+          &amp;quot;analyzer&amp;quot; : &amp;quot;unknown_field_analyzer&amp;quot;,
+          &amp;quot;type&amp;quot; : &amp;quot;string&amp;quot;
+        },
+        &amp;quot;match_mapping_type&amp;quot; : &amp;quot;string&amp;quot;,
+        &amp;quot;match&amp;quot; : &amp;quot;*&amp;quot;
+      }
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(snipped of &lt;em&gt;dynamic_templates&lt;/em&gt; section of the Elasticsearch mapping)&lt;/p&gt;
+
+&lt;p&gt;This leads to the a mapping, where all dynamically added fields are doubtless identified by the setting &lt;em&gt;analyzer&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now it is easy to list all dynamically added fields by a small script, using the already mentioned tool &lt;code&gt;jq&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -XGET &#39;http://localhost:9200/logstash-2015.10.28/_mapping&#39; 2&amp;gt;/dev/null | jq &#39;.[].mappings | to_entries | .[] | .key as $mapping | .value.properties | to_entries | .[] | .key as $property | if .value.analyzer? == &amp;quot;unknown_field_analyzer&amp;quot; then &amp;quot;mapping: &amp;quot; + $mapping + &amp;quot;, property: &amp;quot; + $property else empty end&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This script returns the following example output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-plain&#34;&gt;&amp;quot;mapping: mylog, property: newfield&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Based on the main idea of the above script a monitoring system could easily alert if new fields have been dynamically added.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
