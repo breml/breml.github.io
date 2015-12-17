@@ -70,7 +70,7 @@ CGO_ENABLED=&amp;quot;1&amp;quot;
 
 &lt;p&gt;The &lt;a href=&#34;https://github.com/cloudfoundry/cli/&#34; target=&#34;_blank&#34;&gt;Cloud Foundry Command Line Interface (CF CLI)&lt;/a&gt; is a command line tool for deploying and managing your applications within the app cloud. You can download the CF CLI from &lt;a href=&#34;https://github.com/cloudfoundry/cli/releases/&#34; target=&#34;_blank&#34;&gt;github.com/cloudfoundry/cli/releases&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;The CF CLI tool is written in Go as well and therfore consists of a single static binary. The installation is as simple as download and decompress the executable. For a 64 bit Linux systems, you could use the following commands to download the latest version (6.14.0 as of writing) and to place the executable to the current directory.&lt;/p&gt;
+&lt;p&gt;The CF CLI tool is written in Go as well and therefore consists of a single static binary. The installation is as simple as download and decompress the executable. For a 64 bit Linux systems, you could use the following commands to download the latest version (6.14.0 as of writing) and to place the executable to the current directory.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;curl -L &#39;https://cli.run.pivotal.io/stable?release=linux64-binary&amp;amp;version=6.14.0&amp;amp;source=github-rel&#39; | tar -xz &amp;gt; cf; chmod +x cf
 &lt;/code&gt;&lt;/pre&gt;
@@ -168,7 +168,7 @@ For the brave, just head to &lt;a href=&#34;https://console.developer.swisscom.c
 
 &lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
 	&amp;quot;ImportPath&amp;quot;: &amp;quot;github.com/breml/appcloud&amp;quot;,
-	&amp;quot;GoVersion&amp;quot;: &amp;quot;go1.5&amp;quot;,
+	&amp;quot;GoVersion&amp;quot;: &amp;quot;go1.5.2&amp;quot;,
 	&amp;quot;Deps&amp;quot;: []
 }
 &lt;/code&gt;&lt;/pre&gt;
@@ -233,6 +233,18 @@ applications:
 &lt;p&gt;An extended version of the example, described in this blog post, may be found on &lt;a href=&#34;https://github.com/breml/appcloud&#34; target=&#34;_blank&#34;&gt;github.com/breml/appcloud&lt;/a&gt;. Commit &lt;a href=&#34;https://github.com/breml/appcloud/tree/dcb5ce9d&#34; target=&#34;_blank&#34;&gt;dcb5ce9d&lt;/a&gt; does correspond to this post.&lt;/p&gt;
 
 &lt;p&gt;In the &lt;a href=&#34;https://ict.swisscom.ch/2015/11/push-your-first-node-js-app-into-the-cloud/&#34; target=&#34;_blank&#34;&gt;original post&lt;/a&gt; you may find information about scaling your app and combining your app with services.&lt;/p&gt;
+
+&lt;h2 id=&#34;updates:eea88275f045d0df4893e61c6a42ed5d&#34;&gt;Updates&lt;/h2&gt;
+
+&lt;h3 id=&#34;17-12-2015:eea88275f045d0df4893e61c6a42ed5d&#34;&gt;17.12.2015&lt;/h3&gt;
+
+&lt;p&gt;Just found out, Go version 1.5 is not supported by the buildpack. Therefore we have to provide the Go version in &lt;code&gt;Godeps/Godeps.json&lt;/code&gt; including the minor version (1.5.1 or 1.5.2) even though &lt;em&gt;godep&lt;/em&gt; in the latest version suggests to only specify the major version of Go.&lt;/p&gt;
+
+&lt;p&gt;Warning by &lt;em&gt;godep&lt;/em&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-plain&#34;&gt;godep: WARNING: Recorded go version (go1.5.2) with minor version string found.
+godep: To record current major go version run `godep update -goversion`.
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

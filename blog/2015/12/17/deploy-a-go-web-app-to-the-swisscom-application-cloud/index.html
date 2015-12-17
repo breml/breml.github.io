@@ -151,7 +151,7 @@ CGO_ENABLED=&quot;1&quot;
 
 <p>The <a href="https://github.com/cloudfoundry/cli/" target="_blank">Cloud Foundry Command Line Interface (CF CLI)</a> is a command line tool for deploying and managing your applications within the app cloud. You can download the CF CLI from <a href="https://github.com/cloudfoundry/cli/releases/" target="_blank">github.com/cloudfoundry/cli/releases</a>.</p>
 
-<p>The CF CLI tool is written in Go as well and therfore consists of a single static binary. The installation is as simple as download and decompress the executable. For a 64 bit Linux systems, you could use the following commands to download the latest version (6.14.0 as of writing) and to place the executable to the current directory.</p>
+<p>The CF CLI tool is written in Go as well and therefore consists of a single static binary. The installation is as simple as download and decompress the executable. For a 64 bit Linux systems, you could use the following commands to download the latest version (6.14.0 as of writing) and to place the executable to the current directory.</p>
 
 <pre><code class="language-bash">curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&amp;version=6.14.0&amp;source=github-rel' | tar -xz &gt; cf; chmod +x cf
 </code></pre>
@@ -249,7 +249,7 @@ For the brave, just head to <a href="https://console.developer.swisscom.com/" ta
 
 <pre><code class="language-json">{
 	&quot;ImportPath&quot;: &quot;github.com/breml/appcloud&quot;,
-	&quot;GoVersion&quot;: &quot;go1.5&quot;,
+	&quot;GoVersion&quot;: &quot;go1.5.2&quot;,
 	&quot;Deps&quot;: []
 }
 </code></pre>
@@ -314,6 +314,18 @@ applications:
 <p>An extended version of the example, described in this blog post, may be found on <a href="https://github.com/breml/appcloud" target="_blank">github.com/breml/appcloud</a>. Commit <a href="https://github.com/breml/appcloud/tree/dcb5ce9d" target="_blank">dcb5ce9d</a> does correspond to this post.</p>
 
 <p>In the <a href="https://ict.swisscom.ch/2015/11/push-your-first-node-js-app-into-the-cloud/" target="_blank">original post</a> you may find information about scaling your app and combining your app with services.</p>
+
+<h2 id="updates:eea88275f045d0df4893e61c6a42ed5d">Updates</h2>
+
+<h3 id="17-12-2015:eea88275f045d0df4893e61c6a42ed5d">17.12.2015</h3>
+
+<p>Just found out, Go version 1.5 is not supported by the buildpack. Therefore we have to provide the Go version in <code>Godeps/Godeps.json</code> including the minor version (1.5.1 or 1.5.2) even though <em>godep</em> in the latest version suggests to only specify the major version of Go.</p>
+
+<p>Warning by <em>godep</em>:</p>
+
+<pre><code class="language-plain">godep: WARNING: Recorded go version (go1.5.2) with minor version string found.
+godep: To record current major go version run `godep update -goversion`.
+</code></pre>
 
   </div>
   
