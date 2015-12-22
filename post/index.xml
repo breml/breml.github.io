@@ -6,8 +6,207 @@
     <description>Recent content in Posts on breml&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Dec 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 22 Dec 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://breml.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Using MongoDB Backend Service with Go App in the Swisscom App Cloud</title>
+      <link>https://breml.github.io/blog/2015/12/22/using-mongodb-backend-service-with-go-app-in-the-swisscom-app-cloud/</link>
+      <pubDate>Tue, 22 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://breml.github.io/blog/2015/12/22/using-mongodb-backend-service-with-go-app-in-the-swisscom-app-cloud/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction:0e124371b869ebbf7d75881dc4fcca46&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;In my &lt;a href=&#34;https://breml.github.io/blog/2015/12/17/deploy-a-go-web-app-to-the-swisscom-application-cloud/&#34;&gt;last post&lt;/a&gt; I described how to create and deploy an app, written with the Google &lt;a href=&#34;https://golang.org&#34; target=&#34;_blank&#34;&gt;Go&lt;/a&gt; language, to the &lt;a href=&#34;http://developer.swisscom.com/&#34; target=&#34;_blank&#34;&gt;Swisscom Application Cloud&lt;/a&gt;. This post is a follow up, in which I would like to share some of the learnings, I discovered while extending the &lt;a href=&#34;https://github.com/breml/appcloud/tree/helloworld&#34; target=&#34;_blank&#34;&gt;Hello World&lt;/a&gt; app, following the ideas for the &lt;a href=&#34;https://ict.swisscom.ch/2015/12/move-with-your-mongodb-node-js-into-the-cloud/&#34; target=&#34;_blank&#34;&gt;node.js example&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This blog post is not a detailed step by step tutorial, but rather points out the in my opinion important steps to understand how to get a Go app running in the App Cloud with a MongoDB backend. I strongly suggest to read the above linked blog posts as well, as they help to get a better overall understanding.&lt;br /&gt;
+The full working example could be found in my &lt;a href=&#34;https://github.com/breml/appcloud&#34; target=&#34;_blank&#34;&gt;Github repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Like in my last post, the described steps assume to be executed on a Linux system, precisely on &lt;a href=&#34;http://www.ubuntu.com/&#34; target=&#34;_blank&#34;&gt;Ubuntu&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;add-mongodb-as-backend-to-the-app:0e124371b869ebbf7d75881dc4fcca46&#34;&gt;Add MongoDB as Backend to the App&lt;/h2&gt;
+
+&lt;p&gt;To be able to locally test the extended version of our app you need a &lt;a href=&#34;https://www.mongodb.org/&#34; target=&#34;_blank&#34;&gt;MongoDB&lt;/a&gt; installation. On most Linux distributions MongoDB might be installed from the respective repository with the packet manager of choice. In my case, a simple&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo apt-get install mongodb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;does the job. This installs version 2.4.9 of MongoDB. As I found out later, the MongoDB version in use in the Swisscom App Cloud is 3.0.6 (as of writing). Unfortunately the MongoDB client with version 2.4.9 is not compatible with server version 3.0.6, especially if authentication is used. More on this topic later.&lt;/p&gt;
+
+&lt;p&gt;On Ubuntu the MongoDB daemon gets started automatically after installation. On other Linux distributions, this may require a manual start.&lt;/p&gt;
+
+&lt;h2 id=&#34;connect-a-go-app-to-mongodb:0e124371b869ebbf7d75881dc4fcca46&#34;&gt;Connect a Go App to MongoDB&lt;/h2&gt;
+
+&lt;p&gt;As MongoDB driver package I have chosen &lt;a href=&#34;https://gopkg.in/mgo.v2&#34; target=&#34;_blank&#34;&gt;gopkg.in/mgo.v2&lt;/a&gt; which you may get with the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;go get gopkg.in/mgo.v2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On &lt;a href=&#34;https://godoc.org/gopkg.in/mgo.v2&#34; target=&#34;_blank&#34;&gt;godoc.org&lt;/a&gt; you find the documentation of the &lt;em&gt;mgo.v2&lt;/em&gt; package. The main parts for the usage in our app are the following (only relevant sections, find the complete project on &lt;a href=&#34;https://github.com/breml/appcloud&#34; target=&#34;_blank&#34;&gt;Github&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Insert a new value (while deleting the old):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;session, err := mgo.Dial(&amp;quot;mongodb://localhost:27017/weatherDB&amp;quot;)
+if err != nil {
+	log.Printf(&amp;quot;MongoDB dial err %v\n&amp;quot;, err)
+}
+defer session.Close()
+
+c := session.DB(&amp;quot;weatherDB&amp;quot;).C(&amp;quot;weatherCOLL&amp;quot;)
+
+err = c.DropCollection()
+if err != nil {
+	log.Printf(&amp;quot;MongoDB drop collection err %v\n&amp;quot;, err)
+}
+
+err = c.Insert(Temperature{Temperature: temperature})
+if err != nil {
+	log.Printf(&amp;quot;MongoDB insert err %v\n&amp;quot;, err)
+} 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And querying the saved value:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;session, err := mgo.Dial(&amp;quot;mongodb://localhost:27017/weatherDB&amp;quot;)
+if err != nil {
+	log.Printf(&amp;quot;MongoDB dial err %v\n&amp;quot;, err)
+}
+defer session.Close()
+
+c := session.DB(&amp;quot;weatherDB&amp;quot;).C(&amp;quot;weatherCOLL&amp;quot;)
+
+var result Temperature
+
+err = c.Find(nil).One(&amp;amp;result)
+if err != nil {
+	log.Printf(&amp;quot;MongoDB find err %v\n&amp;quot;, err)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;preparing-the-app-for-the-cloud:0e124371b869ebbf7d75881dc4fcca46&#34;&gt;Preparing the App for the Cloud&lt;/h2&gt;
+
+&lt;p&gt;As you already know from the previous post, in the App Cloud the configuration (e. g. port to bind, connection details for the backend services) are provided by environment variables. In the &amp;ldquo;Hello World&amp;rdquo; example from the first post, the only information, we needed to get from the environment was the port to bind. In this example we used the &lt;em&gt;os&lt;/em&gt; package from the Go standard library to get the environment variable. The connection details for the MongoDB instance in the App Cloud will also be provided as environment variable, where the value is a &lt;a href=&#34;http://json.org&#34; target=&#34;_blank&#34;&gt;JSON&lt;/a&gt; document. It would be possible to parse this JSON document with the &lt;em&gt;encoding/json&lt;/em&gt; package from the Go standard library, but luckily there is even an easier solution. Cloud Foundry provides the &lt;a href=&#34;https://github.com/cloudfoundry-community/go-cfenv&#34; target=&#34;_blank&#34;&gt;go-cfenv&lt;/a&gt; (&lt;a href=&#34;https://godoc.org/github.com/cloudfoundry-community/go-cfenv&#34; target=&#34;_blank&#34;&gt;godoc.org&lt;/a&gt;) Go package, which&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&amp;rdquo;&amp;hellip; provides information about the current app deployed on Cloud Foundry, including any bound service(s).&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This is exactly what we need. Get the package as usual with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;go get github.com/cloudfoundry-community/go-cfenv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the main function of our Go program we add:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// Get settings from ENV if present (e. g. if in App Cloud)
+appEnv, err := cfenv.Current()
+if err == nil {
+	// Port to bind web app
+	port = strconv.Itoa(appEnv.Port)
+
+	name = appEnv.Name
+	log.SetPrefix(name + prefixDelim)
+
+	// MongoDB Service
+	mgoService, err := appEnv.Services.WithName(&amp;quot;mongodb&amp;quot;)
+	if err == nil {
+		var ok bool
+		mongouri, ok = mgoService.Credentials[&amp;quot;uri&amp;quot;].(string)
+		if !ok {
+			log.Fatalf(&amp;quot;No valid MongoDB uri\n&amp;quot;)
+		}
+		mongodb, ok = mgoService.Credentials[&amp;quot;database&amp;quot;].(string)
+		if !ok {
+			log.Fatalf(&amp;quot;No valid MongoDB database\n&amp;quot;)
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above code snipped processes all the relevant environment variables and puts them in Go structs, where we can access them easily.&lt;/p&gt;
+
+&lt;h2 id=&#34;adding-a-mongodb-service:0e124371b869ebbf7d75881dc4fcca46&#34;&gt;Adding a MongoDB Service&lt;/h2&gt;
+
+&lt;p&gt;The steps, required to add MongoDB service to your App Cloud space are quite easy. You have the possibility to add the service in the &lt;a href=&#34;https://console.developer.swisscom.com/&#34; target=&#34;_blank&#34;&gt;Developer Console&lt;/a&gt; or you may use the command line. This assumes you already installed the &lt;a href=&#34;ttps://github.com/cloudfoundry/cli/&#34; target=&#34;_blank&#34;&gt;Cloud Foundry CLI&lt;/a&gt; tools and you logged in to the App Cloud with the CLI tools (see previous blog post).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cf create-service mongodb small mongodb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If your app is already existing in the App Cloud, for example by pushing the &amp;ldquo;Hello World&amp;rdquo; example, you may now bind the MongoDB service to your app:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cf bind-service DemoApp mongodb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;update-our-go-dependencies-with-godep:0e124371b869ebbf7d75881dc4fcca46&#34;&gt;Update our Go Dependencies with Godep&lt;/h2&gt;
+
+&lt;p&gt;Before we can push our updated app to the App Cloud, we have to update our dependencies with the &lt;em&gt;godep&lt;/em&gt; tool, by running:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;godep save -r
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will place the newly introduced Go packages (&lt;em&gt;gopkg.in/mgo.v2&lt;/em&gt; and &lt;em&gt;github.com/cloudfoundry-community/go-cfenv&lt;/em&gt;) including their dependencies into the &lt;code&gt;Godeps&lt;/code&gt; folder and update the import statements accordingly.&lt;/p&gt;
+
+&lt;h2 id=&#34;push-the-updated-app-to-the-cloud:0e124371b869ebbf7d75881dc4fcca46&#34;&gt;Push the Updated App to the Cloud&lt;/h2&gt;
+
+&lt;p&gt;With the MongoDB service created, the binding between app and MongoDB service in place, the app prepared to read the configuration from the environment variables and our Go package dependencies updated, we are ready to push our updated app to the cloud by simply executing &lt;code&gt;cf push&lt;/code&gt;. You may now access the updated app with your browser and enjoy playing with the weather.&lt;/p&gt;
+
+&lt;h2 id=&#34;directly-connect-to-mongodb-service-in-the-app-cloud:0e124371b869ebbf7d75881dc4fcca46&#34;&gt;Directly Connect to MongoDB Service in the App Cloud&lt;/h2&gt;
+
+&lt;p&gt;The Swisscom App Cloud allows to setup a &amp;ldquo;network tunnel&amp;rdquo; from your local machine to the backend services in the App Cloud. This requires the &lt;em&gt;Service Connector&lt;/em&gt; plugin for the Cloud Foundry CLI tools. The installation is simple, to get the Linux 64 bit version of the plugin just execute:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cf install-plugin https://swisscom-plugin.scapp.io/linux64/swisscom-plugin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The list of the available pre-built plugins for the different platforms (Windows, OSX, 32 or 64 bit) is available in the chapter &lt;a href=&#34;https://docs.developer.swisscom.com/services/services/managing-services.html#installation-service-connector&#34; target=&#34;_blank&#34;&gt;Managing Services&lt;/a&gt; in the App Cloud documentation.&lt;/p&gt;
+
+&lt;p&gt;Before we can open the network tunnel to the App Cloud, we have to create a so called service key on the respective service. This may be done with the following command, where &amp;ldquo;local&amp;rdquo; is the name of the newly created service key:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cf create-service-key mongodb local
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To get the just created service key credentials execute:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cf service-key mongodb local
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above command prints something similar to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-plain&#34;&gt;{
+ &amp;quot;database&amp;quot;: &amp;quot;mxAa4xiVidUHrO48&amp;quot;,
+ &amp;quot;database_uri&amp;quot;: &amp;quot;mongodb://PJq5jZbdp6Bqshmn:FSCEvxfMPgd62Q1Z@uncvb9blaeo7t3mw.service.consul:59629/mxAa4xiVidUHrO48&amp;quot;,
+ &amp;quot;host&amp;quot;: &amp;quot;uncvb9blaeo7t3mw.service.consul&amp;quot;,
+ &amp;quot;password&amp;quot;: &amp;quot;FSCEvxfMPgd62Q1Z&amp;quot;,
+ &amp;quot;port&amp;quot;: &amp;quot;59629&amp;quot;,
+ &amp;quot;uri&amp;quot;: &amp;quot;mongodb://PJq5jZbdp6Bqshmn:FSCEvxfMPgd62Q1Z@uncvb9blaeo7t3mw.service.consul:59629/mxAa4xiVidUHrO48&amp;quot;,
+ &amp;quot;username&amp;quot;: &amp;quot;PJq5jZbdp6Bqshmn&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the credentials at hand, we may now setup the network tunnel by executing (replace [host] and [port] according to the generated credentials in the service key):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-plain&#34;&gt;cf service-connector 13000 [host]:[port]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above command will not exit until receiving SIGINT, normally sent by &lt;code&gt;Ctrl+C&lt;/code&gt;. While running, it will listen on the provided port, in the above example port 13000. We now can connect with our local MongoDB client to this local port, which will forward our connection to the MongoDB instance in the App Cloud (replace [username], [database] and [password] according to the generated credentials in the service key):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-plain&#34;&gt;mongo -username [username] -host localhost -port 13000 [database] -password [password]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The password may be omitted in the above command, in this case the password will be prompted, which prevents from leaking sensitive information to the process list or the shell history.&lt;/p&gt;
+
+&lt;p&gt;As mentioned in the section about the MongoDB installation, the above command didn&amp;rsquo;t work for me in the first place. It always throwed the following error:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-plain&#34;&gt;MongoDB shell version: 2.4.9
+connecting to: localhost:13000/mxAa4xiVidUHrO48
+Mon Dec 21 22:06:39.495 Error: 18 { ok: 0.0, errmsg: &amp;quot;auth failed&amp;quot;, code: 18 } at src/mongo/shell/db.js:228
+exception: login failed
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This error message didn&amp;rsquo;t disappear until I updated my local MongoDB installation to a more recent version. For this update I followed the instructions in the &lt;a href=&#34;https://docs.mongodb.org/v3.0/tutorial/install-mongodb-on-ubuntu/&#34; target=&#34;_blank&#34;&gt;Install MongoDB on Ubuntu tutorial&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Deploy a Go Web App to the Swisscom Application Cloud</title>
