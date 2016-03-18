@@ -83,7 +83,7 @@
 
     
 
-    <p>Copyright &copy; 2015 <a href="https://breml.github.io/license/">License</a></p>
+    <p>Copyright &copy; 2016 <a href="https://breml.github.io/license/">License</a></p>
   </div>
 </div>
 
@@ -186,12 +186,12 @@ where the division is an integer division, where the result is round down.<br />
 <p>The used reciprocal is calculated as rounded up division of <em>maxuint</em> and <em>d</em>, the division being an integer division, where the result is round down):<br />
 <code>reciprocal(d) = maxuint / d + 1</code></p>
 
-<p>One of the first question I asked my self about this equation was, why has <em>x * reciprocal(d)</em> to be smaller than <em>reciprocal(d)</em>?  To explain this, let&rsquo;s have a look at an example with <em>d</em> being a power of 2. We know, if <em>d</em> is a power of 2, there is a simpler approach to determine, if a <em>x</em> is dividable by <em>d</em> without remainder, by using the bitwise <em>and</em>-operation described above.<br />
-Nevertheless we may use the proposed algorithm. In this case <em>x * reciprocal(d)</em> will always result to <em>0</em>, if <em>x</em> is dividable by <em>d</em> without remainder. This works because in this case <em>reciprocal(d)</em> results in the effective reciprocal value of d, without rounding error. For all other <em>d</em>, not being a power of 2, <em>reciprocal(d)</em> is always a rounded value, with <em>0 &lt; error &lt; 1</em>.<br />
+<p>One of the first question I asked my self about this equation was, why has *x * reciprocal(d)* to be smaller than <em>reciprocal(d)</em>?  To explain this, let&rsquo;s have a look at an example with <em>d</em> being a power of 2. We know, if <em>d</em> is a power of 2, there is a simpler approach to determine, if a <em>x</em> is dividable by <em>d</em> without remainder, by using the bitwise <em>and</em>-operation described above.<br />
+Nevertheless we may use the proposed algorithm. In this case *x * reciprocal(d)* will always result to <em>0</em>, if <em>x</em> is dividable by <em>d</em> without remainder. This works because in this case <em>reciprocal(d)</em> results in the effective reciprocal value of d, without rounding error. For all other <em>d</em>, not being a power of 2, <em>reciprocal(d)</em> is always a rounded value, with <em>0 &lt; error &lt; 1</em>.<br />
 The <em>error</em> may be calculated as follows:<br />
 <code>reciprocal(d) - 2^size / d</code></p>
 
-<p>This rounding error is the reason, why <em>x * reciprocal(d)</em> does not equal to <em>0</em> if <code>x % d = 0</code>. The higher <em>x</em>, the higher the accumulated <em>error</em> becomes, as the <em>error</em> is multiplied by <em>x</em> as well. Now it becomes clear, there is a point where the accumulated <em>error</em> even exceeds <em>reciprocal(d)</em>, which leads to the situation, where <code>x * reciprocal(d) &lt; reciprocal(d)</code> does not provide the same result as <code>x % d == 0</code>.</p>
+<p>This rounding error is the reason, why *x * reciprocal(d)* does not equal to <em>0</em> if <code>x % d = 0</code>. The higher <em>x</em>, the higher the accumulated <em>error</em> becomes, as the <em>error</em> is multiplied by <em>x</em> as well. Now it becomes clear, there is a point where the accumulated <em>error</em> even exceeds <em>reciprocal(d)</em>, which leads to the situation, where <code>x * reciprocal(d) &lt; reciprocal(d)</code> does not provide the same result as <code>x % d == 0</code>.</p>
 
 <p>With <code>(2^size / d) / error</code> (integer division) the highest <em>x</em> may be calculated, where the proposed algorithm still provides the same result as <code>x % d = 0</code>. Unfortunately this buys us nothing, because in my scenario <em>x</em> may be any number between <em>0</em> and <em>maxuint</em>. So the next question arises, what happens there or a little bit bolder: does it matter? The short answer is: no, for my use case it does not matter. Why?</p>
 

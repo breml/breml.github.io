@@ -83,7 +83,7 @@
 
     
 
-    <p>Copyright &copy; 2015 <a href="https://breml.github.io/license/">License</a></p>
+    <p>Copyright &copy; 2016 <a href="https://breml.github.io/license/">License</a></p>
   </div>
 </div>
 
@@ -115,7 +115,7 @@
 <pre><code>curl -XGET 'http://localhost:9200/logstash-2015.10.28/_mapping'
 </code></pre>
 
-<p>The problem is, these to files are not directly comparable, for the following reasons:</p>
+<p>The problem is, these two files are not directly comparable, for the following reasons:</p>
 
 <ul>
 <li>They are not equally formated (may be corrected by tools like <code>jq</code>)</li>
@@ -175,11 +175,11 @@
 }
 </code></pre>
 
-<p>(snipped of <em>dynamic_templates</em> section of the Elasticsearch mapping)</p>
+<p>(snipped of _dynamic<em>templates</em> section of the Elasticsearch mapping)</p>
 
 <p>This leads to the a mapping, where all dynamically added fields are doubtless identified by the setting <em>analyzer</em>.</p>
 
-<p>Now it is easy to list all dynamically added fields by a small script, using the already mentioned tool <code>jq</code>:</p>
+<p>Now it is easy to list all dynamically added fields by a small script, using the already mentioned tool <code>jq</code> (requires at least version 1.5):</p>
 
 <pre><code>curl -XGET 'http://localhost:9200/logstash-2015.10.28/_mapping' 2&gt;/dev/null | jq '.[].mappings | to_entries | .[] | .key as $mapping | .value.properties | to_entries | .[] | .key as $property | if .value.analyzer? == &quot;unknown_field_analyzer&quot; then &quot;mapping: &quot; + $mapping + &quot;, property: &quot; + $property else empty end'
 </code></pre>

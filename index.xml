@@ -472,7 +472,7 @@ godep: To record current major go version run `godep update -goversion`.
 &lt;pre&gt;&lt;code&gt;curl -XGET &#39;http://localhost:9200/logstash-2015.10.28/_mapping&#39;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The problem is, these to files are not directly comparable, for the following reasons:&lt;/p&gt;
+&lt;p&gt;The problem is, these two files are not directly comparable, for the following reasons:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;They are not equally formated (may be corrected by tools like &lt;code&gt;jq&lt;/code&gt;)&lt;/li&gt;
@@ -532,11 +532,11 @@ godep: To record current major go version run `godep update -goversion`.
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;(snipped of &lt;em&gt;dynamic_templates&lt;/em&gt; section of the Elasticsearch mapping)&lt;/p&gt;
+&lt;p&gt;(snipped of _dynamic&lt;em&gt;templates&lt;/em&gt; section of the Elasticsearch mapping)&lt;/p&gt;
 
 &lt;p&gt;This leads to the a mapping, where all dynamically added fields are doubtless identified by the setting &lt;em&gt;analyzer&lt;/em&gt;.&lt;/p&gt;
 
-&lt;p&gt;Now it is easy to list all dynamically added fields by a small script, using the already mentioned tool &lt;code&gt;jq&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Now it is easy to list all dynamically added fields by a small script, using the already mentioned tool &lt;code&gt;jq&lt;/code&gt; (requires at least version 1.5):&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;curl -XGET &#39;http://localhost:9200/logstash-2015.10.28/_mapping&#39; 2&amp;gt;/dev/null | jq &#39;.[].mappings | to_entries | .[] | .key as $mapping | .value.properties | to_entries | .[] | .key as $property | if .value.analyzer? == &amp;quot;unknown_field_analyzer&amp;quot; then &amp;quot;mapping: &amp;quot; + $mapping + &amp;quot;, property: &amp;quot; + $property else empty end&#39;
 &lt;/code&gt;&lt;/pre&gt;
@@ -646,12 +646,12 @@ where the division is an integer division, where the result is round down.&lt;br
 &lt;p&gt;The used reciprocal is calculated as rounded up division of &lt;em&gt;maxuint&lt;/em&gt; and &lt;em&gt;d&lt;/em&gt;, the division being an integer division, where the result is round down):&lt;br /&gt;
 &lt;code&gt;reciprocal(d) = maxuint / d + 1&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;One of the first question I asked my self about this equation was, why has &lt;em&gt;x * reciprocal(d)&lt;/em&gt; to be smaller than &lt;em&gt;reciprocal(d)&lt;/em&gt;?  To explain this, let&amp;rsquo;s have a look at an example with &lt;em&gt;d&lt;/em&gt; being a power of 2. We know, if &lt;em&gt;d&lt;/em&gt; is a power of 2, there is a simpler approach to determine, if a &lt;em&gt;x&lt;/em&gt; is dividable by &lt;em&gt;d&lt;/em&gt; without remainder, by using the bitwise &lt;em&gt;and&lt;/em&gt;-operation described above.&lt;br /&gt;
-Nevertheless we may use the proposed algorithm. In this case &lt;em&gt;x * reciprocal(d)&lt;/em&gt; will always result to &lt;em&gt;0&lt;/em&gt;, if &lt;em&gt;x&lt;/em&gt; is dividable by &lt;em&gt;d&lt;/em&gt; without remainder. This works because in this case &lt;em&gt;reciprocal(d)&lt;/em&gt; results in the effective reciprocal value of d, without rounding error. For all other &lt;em&gt;d&lt;/em&gt;, not being a power of 2, &lt;em&gt;reciprocal(d)&lt;/em&gt; is always a rounded value, with &lt;em&gt;0 &amp;lt; error &amp;lt; 1&lt;/em&gt;.&lt;br /&gt;
+&lt;p&gt;One of the first question I asked my self about this equation was, why has *x * reciprocal(d)* to be smaller than &lt;em&gt;reciprocal(d)&lt;/em&gt;?  To explain this, let&amp;rsquo;s have a look at an example with &lt;em&gt;d&lt;/em&gt; being a power of 2. We know, if &lt;em&gt;d&lt;/em&gt; is a power of 2, there is a simpler approach to determine, if a &lt;em&gt;x&lt;/em&gt; is dividable by &lt;em&gt;d&lt;/em&gt; without remainder, by using the bitwise &lt;em&gt;and&lt;/em&gt;-operation described above.&lt;br /&gt;
+Nevertheless we may use the proposed algorithm. In this case *x * reciprocal(d)* will always result to &lt;em&gt;0&lt;/em&gt;, if &lt;em&gt;x&lt;/em&gt; is dividable by &lt;em&gt;d&lt;/em&gt; without remainder. This works because in this case &lt;em&gt;reciprocal(d)&lt;/em&gt; results in the effective reciprocal value of d, without rounding error. For all other &lt;em&gt;d&lt;/em&gt;, not being a power of 2, &lt;em&gt;reciprocal(d)&lt;/em&gt; is always a rounded value, with &lt;em&gt;0 &amp;lt; error &amp;lt; 1&lt;/em&gt;.&lt;br /&gt;
 The &lt;em&gt;error&lt;/em&gt; may be calculated as follows:&lt;br /&gt;
 &lt;code&gt;reciprocal(d) - 2^size / d&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;This rounding error is the reason, why &lt;em&gt;x * reciprocal(d)&lt;/em&gt; does not equal to &lt;em&gt;0&lt;/em&gt; if &lt;code&gt;x % d = 0&lt;/code&gt;. The higher &lt;em&gt;x&lt;/em&gt;, the higher the accumulated &lt;em&gt;error&lt;/em&gt; becomes, as the &lt;em&gt;error&lt;/em&gt; is multiplied by &lt;em&gt;x&lt;/em&gt; as well. Now it becomes clear, there is a point where the accumulated &lt;em&gt;error&lt;/em&gt; even exceeds &lt;em&gt;reciprocal(d)&lt;/em&gt;, which leads to the situation, where &lt;code&gt;x * reciprocal(d) &amp;lt; reciprocal(d)&lt;/code&gt; does not provide the same result as &lt;code&gt;x % d == 0&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This rounding error is the reason, why *x * reciprocal(d)* does not equal to &lt;em&gt;0&lt;/em&gt; if &lt;code&gt;x % d = 0&lt;/code&gt;. The higher &lt;em&gt;x&lt;/em&gt;, the higher the accumulated &lt;em&gt;error&lt;/em&gt; becomes, as the &lt;em&gt;error&lt;/em&gt; is multiplied by &lt;em&gt;x&lt;/em&gt; as well. Now it becomes clear, there is a point where the accumulated &lt;em&gt;error&lt;/em&gt; even exceeds &lt;em&gt;reciprocal(d)&lt;/em&gt;, which leads to the situation, where &lt;code&gt;x * reciprocal(d) &amp;lt; reciprocal(d)&lt;/code&gt; does not provide the same result as &lt;code&gt;x % d == 0&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;With &lt;code&gt;(2^size / d) / error&lt;/code&gt; (integer division) the highest &lt;em&gt;x&lt;/em&gt; may be calculated, where the proposed algorithm still provides the same result as &lt;code&gt;x % d = 0&lt;/code&gt;. Unfortunately this buys us nothing, because in my scenario &lt;em&gt;x&lt;/em&gt; may be any number between &lt;em&gt;0&lt;/em&gt; and &lt;em&gt;maxuint&lt;/em&gt;. So the next question arises, what happens there or a little bit bolder: does it matter? The short answer is: no, for my use case it does not matter. Why?&lt;/p&gt;
 

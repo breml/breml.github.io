@@ -34,7 +34,7 @@
 &lt;pre&gt;&lt;code&gt;curl -XGET &#39;http://localhost:9200/logstash-2015.10.28/_mapping&#39;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The problem is, these to files are not directly comparable, for the following reasons:&lt;/p&gt;
+&lt;p&gt;The problem is, these two files are not directly comparable, for the following reasons:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;They are not equally formated (may be corrected by tools like &lt;code&gt;jq&lt;/code&gt;)&lt;/li&gt;
@@ -94,11 +94,11 @@
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;(snipped of &lt;em&gt;dynamic_templates&lt;/em&gt; section of the Elasticsearch mapping)&lt;/p&gt;
+&lt;p&gt;(snipped of _dynamic&lt;em&gt;templates&lt;/em&gt; section of the Elasticsearch mapping)&lt;/p&gt;
 
 &lt;p&gt;This leads to the a mapping, where all dynamically added fields are doubtless identified by the setting &lt;em&gt;analyzer&lt;/em&gt;.&lt;/p&gt;
 
-&lt;p&gt;Now it is easy to list all dynamically added fields by a small script, using the already mentioned tool &lt;code&gt;jq&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Now it is easy to list all dynamically added fields by a small script, using the already mentioned tool &lt;code&gt;jq&lt;/code&gt; (requires at least version 1.5):&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;curl -XGET &#39;http://localhost:9200/logstash-2015.10.28/_mapping&#39; 2&amp;gt;/dev/null | jq &#39;.[].mappings | to_entries | .[] | .key as $mapping | .value.properties | to_entries | .[] | .key as $property | if .value.analyzer? == &amp;quot;unknown_field_analyzer&amp;quot; then &amp;quot;mapping: &amp;quot; + $mapping + &amp;quot;, property: &amp;quot; + $property else empty end&#39;
 &lt;/code&gt;&lt;/pre&gt;
