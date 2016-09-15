@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Drafts on breml&#39;s blog</title>
+    <link>https://breml.github.io/drafts/</link>
+    <description>Recent content in Drafts on breml&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://breml.github.io/drafts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title></title>
+      <link>https://breml.github.io/drafts/peg%20in%20go/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://breml.github.io/drafts/peg%20in%20go/</guid>
+      <description>
+
+&lt;h1 id=&#34;peg-in-go:77a9b048611e4074858c3efc37b31959&#34;&gt;PEG in Go&lt;/h1&gt;
+
+&lt;h2 id=&#34;error-handling:77a9b048611e4074858c3efc37b31959&#34;&gt;Error Handling&lt;/h2&gt;
+
+&lt;p&gt;Error Branch with /
+Return Error
+Panic if not recoverable&lt;/p&gt;
+
+&lt;p&gt;Steht der Error Stack zu verfügung im Parser? Können Fehler zurückgesetzt werden?&lt;/p&gt;
+
+&lt;p&gt;Customized Errors zurück geben:
+Missing Keyword/Keyword expected error, Keyword in Field
+Missing closing xy (&amp;ldquo;, ), usw.)
+Expected Blockstart Element, usw.&lt;/p&gt;
+
+&lt;p&gt;Wie sind die lesbaren Rulenames nutzbar?&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

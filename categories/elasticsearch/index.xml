@@ -6,8 +6,76 @@
     <description>Recent content in Elasticsearch on breml&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 28 Oct 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 12 Sep 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://breml.github.io/categories/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Comment Elasticsearch Mapping</title>
+      <link>https://breml.github.io/blog/2016/09/12/comment-elasticsearch-mapping/</link>
+      <pubDate>Mon, 12 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://breml.github.io/blog/2016/09/12/comment-elasticsearch-mapping/</guid>
+      <description>&lt;p&gt;If you have worked with large &lt;a href=&#34;https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html&#34; target=&#34;_blank&#34;&gt;Elasticsearch mappings&lt;/a&gt; you may also have encountered the problem, that there is no possibility to comment your mapping or &lt;a href=&#34;https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html&#34; target=&#34;_blank&#34;&gt;indexing template&lt;/a&gt;. Unfortunately the Elasticsearch mappings as well as the indexing templates are defined in JSON, which does not allow to add comments.&lt;/p&gt;
+
+&lt;p&gt;I thought the same, until I stumbled over &lt;a href=&#34;https://github.com/elastic/elasticsearch/issues/1394&#34; target=&#34;_blank&#34;&gt;Elasticsearch issue 1394&lt;/a&gt; and the linked &lt;a href=&#34;https://github.com/elastic/elasticsearch/commit/6f7253c5242e7fb94d959ce291c88f93887e3bde&#34; target=&#34;_blank&#34;&gt;commit from January 2013&lt;/a&gt;, where a single line was added to the the configuration of the JSON factory:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;jsonFactory.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Could it really be true? Are there comments supported in Elasticsearch mappings?&lt;/p&gt;
+
+&lt;p&gt;Elasticsearch uses the JSON parser from &lt;a href=&#34;https://github.com/FasterXML&#34; target=&#34;_blank&#34;&gt;FasterXML&lt;/a&gt;. The supported features of the FasterXML JSON parser are documented on a &lt;a href=&#34;https://github.com/FasterXML/jackson-core/wiki/JsonParser-Features&#34; target=&#34;_blank&#34;&gt;wiki page&lt;/a&gt; on GitHub. On this page, the feature &lt;code&gt;ALLOW_COMMENTS&lt;/code&gt; is described as follows:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;ALLOW_COMMENTS (default: false) (for textual formats with concept of comments)&lt;br /&gt;
+For textual formats that do not have official comments, but for which &amp;ldquo;de facto&amp;rdquo; conventions exist (like JSON), determines whether use of such unofficial comments is allowed or not&lt;br /&gt;
+Supported for: JSON&lt;br /&gt;
+For JSON: enabling the feature allows recognition and handling of &amp;ldquo;C comments&amp;rdquo; (/* &amp;hellip; */) and &amp;ldquo;C++ comments&amp;rdquo; (// &amp;hellip;.)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;YES!&lt;/strong&gt; Exactly what we where looking for. The commenting of Elasticsearch mappings does work well with some exceptions. Until now I found the following limitations:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Comments at the head of the JSON document, before the first opening &lt;code&gt;{&lt;/code&gt;-bracket are not working&lt;/li&gt;
+&lt;li&gt;Single line comments with &lt;code&gt;//&lt;/code&gt; only work at the end of the JSON document (after the closing &lt;code&gt;}&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;But these limitations are minor and easily worked a round.&lt;/p&gt;
+
+&lt;p&gt;To make it easier for others to find out about the possibility to comment Elasticsearch mappings, I filed an &lt;a href=&#34;https://github.com/elastic/elasticsearch/issues/20513&#34; target=&#34;_blank&#34;&gt;issue #20513&lt;/a&gt; on Github.&lt;/p&gt;
+
+&lt;p&gt;Example with comments from &lt;a href=&#34;https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html&#34; target=&#34;_blank&#34;&gt;Elasticsearch documentation&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-plain&#34;&gt;{
+  /* mapping, used for all indices prefixed with &amp;quot;te&amp;quot; */
+  &amp;quot;template&amp;quot;: &amp;quot;te*&amp;quot;,
+  &amp;quot;settings&amp;quot;: {
+    /* only 1 shard is needed */
+    &amp;quot;number_of_shards&amp;quot;: 1
+  },
+  &amp;quot;mappings&amp;quot;: {
+    &amp;quot;type1&amp;quot;: {
+      &amp;quot;_source&amp;quot;: {
+        /* source not needed */
+        &amp;quot;enabled&amp;quot;: false
+      },
+      &amp;quot;properties&amp;quot;: {
+        &amp;quot;host_name&amp;quot;: {
+          &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;,
+          /* host_name is used as filter, do not analyze */
+          &amp;quot;index&amp;quot;: &amp;quot;not_analyzed&amp;quot;
+        },
+        &amp;quot;created_at&amp;quot;: {
+          &amp;quot;type&amp;quot;: &amp;quot;date&amp;quot;,
+          &amp;quot;format&amp;quot;: &amp;quot;EEE MMM dd HH:mm:ss Z YYYY&amp;quot;
+        }
+      }
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Tagging of dynamically added Fields in Elasticsearch</title>

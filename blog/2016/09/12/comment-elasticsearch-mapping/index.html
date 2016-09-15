@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Comment Elasticsearch Mapping &middot; breml</title>
+
+  
+  <link rel="stylesheet" href="https://breml.github.io/css/poole.css">
+  <link rel="stylesheet" href="https://breml.github.io/css/hyde.css">
+  <link rel="stylesheet" href="https://breml.github.io/css/poole-overrides.css">
+  <link rel="stylesheet" href="https://breml.github.io/css/hyde-overrides.css">
+  <link rel="stylesheet" href="https://breml.github.io/css/hyde-x.css">
+  <link rel="stylesheet" href="https://breml.github.io/css/breml.css">
+  <link rel="stylesheet" href="https://breml.github.io/css/highlight/sunburst.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://breml.github.io/touch-icon-144-precomposed.png">
+  <link href="https://breml.github.io/favicon.png" rel="icon">
+
+  
+  
+  
+  
+
+  <meta name="description" content="Comment Elasticsearch mapping JSON file">
+  <meta name="keywords" content="Elasticsearch,mapping,comment,JSON">
+  <link rel="author" href="http://plus.google.com/101218494353589513841">
+</head>
+<body class="theme-base-0d">
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://breml.github.io/"><img src="https://www.gravatar.com/avatar/ffc66df1e22b19865762dc6dc8129ae8?s=200" alt="gravatar"></a>
+      <h1>breml</h1>
+      <p class="lead">my thoughts about&hellip;</p>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="https://breml.github.io/">Blog</a></li>
+      
+      <li class="sidebar-nav-item"><a href="https://breml.github.io/about/">About</a></li>
+      
+    </ul>
+
+    <p>Categories:<br>
+    
+    <a class="label" href="/categories/bpf">bpf</a>
+    
+    <a class="label" href="/categories/elasticsearch">elasticsearch</a>
+    
+    <a class="label" href="/categories/git">git</a>
+    
+    <a class="label" href="/categories/gogitignore">gogitignore</a>
+    
+    <a class="label" href="/categories/golang">golang</a>
+    
+    <a class="label" href="/categories/sflow">sflow</a>
+    
+    </p>
+
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item">
+      <a href="https://github.com/breml" target="_blank"><i class="fa fa-github-square fa-3x"></i></a>
+      
+      <a href="https://www.linkedin.com/in/lucas-bremgartner-96b477" target="_blank"><i class="fa fa-linkedin-square fa-3x"></i></a>
+      
+      
+      
+      <a href="https://twitter.com/_breml_" target="_blank"><i class="fa fa-twitter-square fa-3x"></i></a>
+      <a href="https://www.xing.com/profile/Lucas_Bremgartner" target="_blank"><i class="fa fa-xing-square fa-3x"></i></a>
+      
+      <a href="" type="application/rss+xml" target="_blank"><i class="fa fa-rss-square fa-3x"></i></a>
+      </li>
+    </ul>
+
+    
+
+    <p>Copyright &copy; 2016 <a href="https://breml.github.io/license/">License</a></p>
+  </div>
+</div>
+
+
+<div class="content container">
+  <div class="post">
+    <h1>Comment Elasticsearch Mapping</h1>
+    <span class="post-date">Sep 12, 2016 
+    
+    <br/>
+    <a class="label" href="https://breml.github.io/categories/elasticsearch">Elasticsearch</a>
+    </span>
+    <p>If you have worked with large <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html" target="_blank">Elasticsearch mappings</a> you may also have encountered the problem, that there is no possibility to comment your mapping or <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html" target="_blank">indexing template</a>. Unfortunately the Elasticsearch mappings as well as the indexing templates are defined in JSON, which does not allow to add comments.</p>
+
+<p>I thought the same, until I stumbled over <a href="https://github.com/elastic/elasticsearch/issues/1394" target="_blank">Elasticsearch issue 1394</a> and the linked <a href="https://github.com/elastic/elasticsearch/commit/6f7253c5242e7fb94d959ce291c88f93887e3bde" target="_blank">commit from January 2013</a>, where a single line was added to the the configuration of the JSON factory:</p>
+
+<pre><code class="language-java">jsonFactory.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+</code></pre>
+
+<p>Could it really be true? Are there comments supported in Elasticsearch mappings?</p>
+
+<p>Elasticsearch uses the JSON parser from <a href="https://github.com/FasterXML" target="_blank">FasterXML</a>. The supported features of the FasterXML JSON parser are documented on a <a href="https://github.com/FasterXML/jackson-core/wiki/JsonParser-Features" target="_blank">wiki page</a> on GitHub. On this page, the feature <code>ALLOW_COMMENTS</code> is described as follows:</p>
+
+<blockquote>
+<p>ALLOW_COMMENTS (default: false) (for textual formats with concept of comments)<br />
+For textual formats that do not have official comments, but for which &ldquo;de facto&rdquo; conventions exist (like JSON), determines whether use of such unofficial comments is allowed or not<br />
+Supported for: JSON<br />
+For JSON: enabling the feature allows recognition and handling of &ldquo;C comments&rdquo; (/* &hellip; */) and &ldquo;C++ comments&rdquo; (// &hellip;.)</p>
+</blockquote>
+
+<p><strong>YES!</strong> Exactly what we where looking for. The commenting of Elasticsearch mappings does work well with some exceptions. Until now I found the following limitations:</p>
+
+<ol>
+<li>Comments at the head of the JSON document, before the first opening <code>{</code>-bracket are not working</li>
+<li>Single line comments with <code>//</code> only work at the end of the JSON document (after the closing <code>}</code>)</li>
+</ol>
+
+<p>But these limitations are minor and easily worked a round.</p>
+
+<p>To make it easier for others to find out about the possibility to comment Elasticsearch mappings, I filed an <a href="https://github.com/elastic/elasticsearch/issues/20513" target="_blank">issue #20513</a> on Github.</p>
+
+<p>Example with comments from <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html" target="_blank">Elasticsearch documentation</a>:</p>
+
+<pre><code class="language-plain">{
+  /* mapping, used for all indices prefixed with &quot;te&quot; */
+  &quot;template&quot;: &quot;te*&quot;,
+  &quot;settings&quot;: {
+    /* only 1 shard is needed */
+    &quot;number_of_shards&quot;: 1
+  },
+  &quot;mappings&quot;: {
+    &quot;type1&quot;: {
+      &quot;_source&quot;: {
+        /* source not needed */
+        &quot;enabled&quot;: false
+      },
+      &quot;properties&quot;: {
+        &quot;host_name&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          /* host_name is used as filter, do not analyze */
+          &quot;index&quot;: &quot;not_analyzed&quot;
+        },
+        &quot;created_at&quot;: {
+          &quot;type&quot;: &quot;date&quot;,
+          &quot;format&quot;: &quot;EEE MMM dd HH:mm:ss Z YYYY&quot;
+        }
+      }
+    }
+  }
+}
+</code></pre>
+
+  </div>
+  
+</div>
+
+
+
+
+<script src="https://breml.github.io/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+  var _gaq=[['_setAccount','UA-68498959-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+</body>
+</html>
+
