@@ -3,6 +3,10 @@
   bottom: auto;
 }
 
+.sidebar-about a {
+  text-decoration: none;
+}
+
 .sidebar .label {
   background-color: #FFFFFF; /*rgba(255,255,255,.5);*/
   color: #6a9fb5;
@@ -26,4 +30,9 @@
   padding: 0.5em;
   background: #000 none repeat scroll 0% 0%;
   color: #F8F8F8;
+  white-space: pre;
+}
+
+.hljs {
+  white-space: pre;
 }

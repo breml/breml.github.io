@@ -1,213 +1,38 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
-<head>
-  <link href="http://gmpg.org/xfn/11" rel="profile">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-
-  <title>Tagging of dynamically added Fields in Elasticsearch &middot; breml</title>
-
-  
-  <link rel="stylesheet" href="https://breml.github.io/css/poole.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/hyde.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/poole-overrides.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/hyde-overrides.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/hyde-x.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/breml.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/highlight/sunburst.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-
-  
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://breml.github.io/touch-icon-144-precomposed.png">
-  <link href="https://breml.github.io/favicon.png" rel="icon">
-
-  
-  
-  
-  
-
-  <meta name="description" content="Detect dynamically added fields in Elasticsearch with the definition of a custom field analyzer.">
-  <meta name="keywords" content="Elasticsearch,mapping,dynamic,field,template,tag,detect">
-  <link rel="author" href="http://plus.google.com/101218494353589513841">
-</head>
-<body class="theme-base-0d">
-<div class="sidebar">
-  <div class="container sidebar-sticky">
-    <div class="sidebar-about">
-      <a href="https://breml.github.io/"><img src="https://www.gravatar.com/avatar/ffc66df1e22b19865762dc6dc8129ae8?s=200" alt="gravatar"></a>
-      <h1>breml</h1>
-      <p class="lead">my thoughts about&hellip;</p>
-    </div>
-
-    <ul class="sidebar-nav">
-      <li class="sidebar-nav-item"><a href="https://breml.github.io/">Blog</a></li>
-      
-      <li class="sidebar-nav-item"><a href="https://breml.github.io/about/">About</a></li>
-      
-    </ul>
-
-    <p>Categories:<br>
-    
-    <a class="label" href="/categories/bpf">bpf</a>
-    
-    <a class="label" href="/categories/elasticsearch">elasticsearch</a>
-    
-    <a class="label" href="/categories/git">git</a>
-    
-    <a class="label" href="/categories/gogitignore">gogitignore</a>
-    
-    <a class="label" href="/categories/golang">golang</a>
-    
-    <a class="label" href="/categories/sflow">sflow</a>
-    
-    </p>
-
-
-    <ul class="sidebar-nav">
-      <li class="sidebar-nav-item">
-      <a href="https://github.com/breml" target="_blank"><i class="fa fa-github-square fa-3x"></i></a>
-      
-      <a href="https://www.linkedin.com/in/lucas-bremgartner-96b477" target="_blank"><i class="fa fa-linkedin-square fa-3x"></i></a>
-      
-      
-      
-      <a href="https://twitter.com/_breml_" target="_blank"><i class="fa fa-twitter-square fa-3x"></i></a>
-      <a href="https://www.xing.com/profile/Lucas_Bremgartner" target="_blank"><i class="fa fa-xing-square fa-3x"></i></a>
-      
-      <a href="" type="application/rss+xml" target="_blank"><i class="fa fa-rss-square fa-3x"></i></a>
-      </li>
-    </ul>
-
-    
-
-    <p>Copyright &copy; 2016 <a href="https://breml.github.io/license/">License</a></p>
-  </div>
-</div>
-
-
-<div class="content container">
-  <div class="post">
-    <h1>Tagging of dynamically added Fields in Elasticsearch</h1>
-    <span class="post-date">Oct 28, 2015 
-    
-    <br/>
-    <a class="label" href="https://breml.github.io/categories/elasticsearch">Elasticsearch</a>
-    </span>
-    
-
-<p>At work we use the ELK Stack (Elasticsearch, Logstash and Kibana) to process, store and visualize all kind of log data. To get the most out of the information stored in Elasticsearch, we maintain a handcrafted Elasticsearch mapping.</p>
-
-<p>As we are in the process of continuously adding more and more log sources, now and then our Elasticsearch mapping is not complete. In this case the dynamic mapping feature of Elasticsearch adds these new fields by it&rsquo;s own.</p>
-
-<p>As we want to keep our Elasticsearch mapping up to date we have been looking for an easy way to identify all the new fields dynamically added.</p>
-
-<h2 id="naive-approach:21bceea47ef0daa27dbdfefe21d795ad">Naive approach</h2>
-
-<p>The naive approach to find the differences between our handcrafted mapping and the actual mapping, used by Elasticsearch for the respective index (possibly with dynamically added fields), would be a simple <code>diff</code> of two text files.</p>
-
-<p>The handcrafted mapping is stored as a simple JSON-file, which is used by Logstash to apply the mapping when a new index is created.</p>
-
-<p>The active mapping is accessible via the Elasticsearch API, for example with <code>curl</code>:</p>
-
-<pre><code>curl -XGET 'http://localhost:9200/logstash-2015.10.28/_mapping'
-</code></pre>
-
-<p>The problem is, these two files are not directly comparable, for the following reasons:</p>
-
-<ul>
-<li>They are not equally formated (may be corrected by tools like <code>jq</code>)</li>
-<li>They do not necessarily include the same settings for the defined fields, as Elasticsearch does not provide settings, which are set to the default value and our handcrafted mapping may include settings which are the default value</li>
-<li>The order of the attributes may not necessarily be the same</li>
-</ul>
-
-<p>So it is obvious a naive <code>diff</code> of the two files does not lead the goal, even if we ensure the same formating for both files by using a tool like <a href="https://stedolan.github.io/jq/" target="_blank">jq</a>. Even if we use JSON aware tools to find the differences, like <a href="http://json-delta.readthedocs.org/en/latest/" target="_blank">json-delta</a>, we do not get the right result as these tools are not able to determine, where field settings are included in the handcrafted mapping file, which are set to the default value.</p>
-
-<h2 id="dynamic-field-template-and-custom-field-analyzer:21bceea47ef0daa27dbdfefe21d795ad">Dynamic field template and custom field analyzer</h2>
-
-<p>So we looked for an other way to achieve the goal and we came up with the following solution.</p>
-
-<p>Elasticsearch does provide two features, which combined provide a easy solution to identify all dynamically added fields:</p>
-
-<ul>
-<li>Elasticsearch allows to define the dynamic mapping, which is used, if a certain field is not currently present in the mapping</li>
-<li>Elasticsearch allows to define custom analyzers, used to analyze the content of a field in a certain way.</li>
-</ul>
-
-<p>What we did is defining a custom analyzer called <em>unknown_field_analyzer</em>.</p>
-
-<pre><code class="language-json">{
-  &quot;template&quot; : &quot;logstash-*&quot;,
-  &quot;settings&quot; : {
-    &quot;analysis&quot; : {
-      &quot;analyzer&quot; : {
-        &quot;unknown_field_analyzer&quot; : {
-          &quot;type&quot; : &quot;whitespace&quot;
+<!doctype html><html xmlns=http://www.w3.org/1999/xhtml xml:lang=en lang=en-us><head><link href=http://gmpg.org/xfn/11 rel=profile><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><title>Tagging of dynamically added Fields in Elasticsearch &#183; breml</title><meta name=description content="Detect dynamically added fields in Elasticsearch with the definition of a custom field analyzer."><meta name=keywords content="Elasticsearch,mapping,dynamic,field,template,tag,detect"><link rel=stylesheet href=https://breml.github.io/css/poole.css><link rel=stylesheet href=https://breml.github.io/css/hyde.css><link rel=stylesheet href=https://breml.github.io/css/poole-overrides.css><link rel=stylesheet href=https://breml.github.io/css/hyde-overrides.css><link rel=stylesheet href=https://breml.github.io/css/hyde-x.css><link rel=stylesheet href=https://breml.github.io/css/breml.css><link rel=stylesheet href=https://breml.github.io/css/highlight/sunburst.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface"><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=apple-touch-icon-precomposed sizes=144x144 href=https://breml.github.io/touch-icon-144-precomposed.png><link href=https://breml.github.io/favicon.png rel=icon></head><body class=theme-base-0d><div class=sidebar><div class="container sidebar-sticky"><div class=sidebar-about><a href=https://breml.github.io/><img src="https://www.gravatar.com/avatar/ffc66df1e22b19865762dc6dc8129ae8?s=200" alt=gravatar><h1>breml</h1></a><p class=lead>my thoughts about&mldr;</p></div><ul class=sidebar-nav><li class=sidebar-nav-item><a href=https://breml.github.io/>Blog</a></li><li class=sidebar-nav-item><a href=https://breml.github.io/about/>About</a></li></ul><ul class=sidebar-nav><li class=sidebar-nav-item><a href=https://github.com/breml target=_blank><i class="fa fa-github-square fa-3x"></i></a><a href=https://www.linkedin.com/in/lucas-bremgartner-96b477 target=_blank><i class="fa fa-linkedin-square fa-3x"></i></a><a href=https://twitter.com/_breml_ target=_blank><i class="fa fa-twitter-square fa-3x"></i></a><a href=https://www.xing.com/profile/Lucas_Bremgartner target=_blank><i class="fa fa-xing-square fa-3x"></i></a><a href type=application/rss+xml target=_blank><i class="fa fa-rss-square fa-3x"></i></a></li></ul><p>Categories:<br><a class=label href=/categories/bpf>bpf</a>
+<a class=label href=/categories/elasticsearch>elasticsearch</a>
+<a class=label href=/categories/git>git</a>
+<a class=label href=/categories/gogitignore>gogitignore</a>
+<a class=label href=/categories/golang>golang</a>
+<a class=label href=/categories/sflow>sflow</a></p><p>Copyright &copy; 2020 <a href=https://breml.github.io/license/>License</a></p></div></div><div class="content container"><div class=post><h1>Tagging of dynamically added Fields in Elasticsearch</h1><span class=post-date>Oct 28, 2015<br><a class=label href=https://breml.github.io/categories/elasticsearch>Elasticsearch</a></span><p>At work we use the ELK Stack (Elasticsearch, Logstash and Kibana) to process, store and visualize all kind of log data. To get the most out of the information stored in Elasticsearch, we maintain a handcrafted Elasticsearch mapping.</p><p>As we are in the process of continuously adding more and more log sources, now and then our Elasticsearch mapping is not complete. In this case the dynamic mapping feature of Elasticsearch adds these new fields by it&rsquo;s own.</p><p>As we want to keep our Elasticsearch mapping up to date we have been looking for an easy way to identify all the new fields dynamically added.</p><h2 id=naive-approach>Naive approach</h2><p>The naive approach to find the differences between our handcrafted mapping and the actual mapping, used by Elasticsearch for the respective index (possibly with dynamically added fields), would be a simple <code>diff</code> of two text files.</p><p>The handcrafted mapping is stored as a simple JSON-file, which is used by Logstash to apply the mapping when a new index is created.</p><p>The active mapping is accessible via the Elasticsearch API, for example with <code>curl</code>:</p><pre><code>curl -XGET 'http://localhost:9200/logstash-2015.10.28/_mapping'
+</code></pre><p>The problem is, these two files are not directly comparable, for the following reasons:</p><ul><li>They are not equally formated (may be corrected by tools like <code>jq</code>)</li><li>They do not necessarily include the same settings for the defined fields, as Elasticsearch does not provide settings, which are set to the default value and our handcrafted mapping may include settings which are the default value</li><li>The order of the attributes may not necessarily be the same</li></ul><p>So it is obvious a naive <code>diff</code> of the two files does not lead the goal, even if we ensure the same formating for both files by using a tool like <a href=https://stedolan.github.io/jq/>jq</a>. Even if we use JSON aware tools to find the differences, like <a href=http://json-delta.readthedocs.org/en/latest/>json-delta</a>, we do not get the right result as these tools are not able to determine, where field settings are included in the handcrafted mapping file, which are set to the default value.</p><h2 id=dynamic-field-template-and-custom-field-analyzer>Dynamic field template and custom field analyzer</h2><p>So we looked for an other way to achieve the goal and we came up with the following solution.</p><p>Elasticsearch does provide two features, which combined provide a easy solution to identify all dynamically added fields:</p><ul><li>Elasticsearch allows to define the dynamic mapping, which is used, if a certain field is not currently present in the mapping</li><li>Elasticsearch allows to define custom analyzers, used to analyze the content of a field in a certain way.</li></ul><p>What we did is defining a custom analyzer called <em>unknown_field_analyzer</em>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
+  <span style=color:#f92672>&#34;template&#34;</span> : <span style=color:#e6db74>&#34;logstash-*&#34;</span>,
+  <span style=color:#f92672>&#34;settings&#34;</span> : {
+    <span style=color:#f92672>&#34;analysis&#34;</span> : {
+      <span style=color:#f92672>&#34;analyzer&#34;</span> : {
+        <span style=color:#f92672>&#34;unknown_field_analyzer&#34;</span> : {
+          <span style=color:#f92672>&#34;type&#34;</span> : <span style=color:#e6db74>&#34;whitespace&#34;</span>
         }
       }
     }
   }
-...
+<span style=color:#960050;background-color:#1e0010>...</span>
 }
-</code></pre>
-
-<p>(snipped of <em>analyzers</em> section of the Elasticsearch mapping)</p>
-
-<p>This analyzer we apply in the definition for the dynamic templates.</p>
-
-<pre><code class="language-json">{
-  &quot;dynamic_templates&quot; : [
+</code></pre></div><p>(snipped of <em>analyzers</em> section of the Elasticsearch mapping)</p><p>This analyzer we apply in the definition for the dynamic templates.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
+  <span style=color:#f92672>&#34;dynamic_templates&#34;</span> : [
     {
-      &quot;string_fields&quot; : {
-        &quot;mapping&quot; : {
-          &quot;index&quot; : &quot;analyzed&quot;,
-          &quot;omit_norms&quot; : true,
-          &quot;analyzer&quot; : &quot;unknown_field_analyzer&quot;,
-          &quot;type&quot; : &quot;string&quot;
+      <span style=color:#f92672>&#34;string_fields&#34;</span> : {
+        <span style=color:#f92672>&#34;mapping&#34;</span> : {
+          <span style=color:#f92672>&#34;index&#34;</span> : <span style=color:#e6db74>&#34;analyzed&#34;</span>,
+          <span style=color:#f92672>&#34;omit_norms&#34;</span> : <span style=color:#66d9ef>true</span>,
+          <span style=color:#f92672>&#34;analyzer&#34;</span> : <span style=color:#e6db74>&#34;unknown_field_analyzer&#34;</span>,
+          <span style=color:#f92672>&#34;type&#34;</span> : <span style=color:#e6db74>&#34;string&#34;</span>
         },
-        &quot;match_mapping_type&quot; : &quot;string&quot;,
-        &quot;match&quot; : &quot;*&quot;
+        <span style=color:#f92672>&#34;match_mapping_type&#34;</span> : <span style=color:#e6db74>&#34;string&#34;</span>,
+        <span style=color:#f92672>&#34;match&#34;</span> : <span style=color:#e6db74>&#34;*&#34;</span>
       }
     }
   ]
 }
-</code></pre>
-
-<p>(snipped of _dynamic<em>templates</em> section of the Elasticsearch mapping)</p>
-
-<p>This leads to the a mapping, where all dynamically added fields are doubtless identified by the setting <em>analyzer</em>.</p>
-
-<p>Now it is easy to list all dynamically added fields by a small script, using the already mentioned tool <code>jq</code> (requires at least version 1.5):</p>
-
-<pre><code>curl -XGET 'http://localhost:9200/logstash-2015.10.28/_mapping' 2&gt;/dev/null | jq '.[].mappings | to_entries | .[] | .key as $mapping | .value.properties | to_entries | .[] | .key as $property | if .value.analyzer? == &quot;unknown_field_analyzer&quot; then &quot;mapping: &quot; + $mapping + &quot;, property: &quot; + $property else empty end'
-</code></pre>
-
-<p>This script returns the following example output:</p>
-
-<pre><code class="language-plain">&quot;mapping: mylog, property: newfield&quot;
-</code></pre>
-
-<p>Based on the main idea of the above script a monitoring system could easily alert if new fields have been dynamically added.</p>
-
-  </div>
-  
-</div>
-
-
-
-
-<script src="https://breml.github.io/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-<script>
-  var _gaq=[['_setAccount','UA-68498959-1'],['_trackPageview']];
-  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-  s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
-
-</body>
-</html>
-
+</code></pre></div><p>(snipped of <em>dynamic_templates</em> section of the Elasticsearch mapping)</p><p>This leads to the a mapping, where all dynamically added fields are doubtless identified by the setting <em>analyzer</em>.</p><p>Now it is easy to list all dynamically added fields by a small script, using the already mentioned tool <code>jq</code> (requires at least version 1.5):</p><pre><code>curl -XGET 'http://localhost:9200/logstash-2015.10.28/_mapping' 2&gt;/dev/null | jq '.[].mappings | to_entries | .[] | .key as $mapping | .value.properties | to_entries | .[] | .key as $property | if .value.analyzer? == &quot;unknown_field_analyzer&quot; then &quot;mapping: &quot; + $mapping + &quot;, property: &quot; + $property else empty end'
+</code></pre><p>This script returns the following example output:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-plain data-lang=plain>&#34;mapping: mylog, property: newfield&#34;
+</code></pre></div><p>Based on the main idea of the above script a monitoring system could easily alert if new fields have been dynamically added.</p></div></div><script src=https://breml.github.io/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script><script>var _gaq=[['_setAccount','UA-68498959-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'));</script></body></html>

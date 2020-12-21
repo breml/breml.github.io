@@ -1,309 +1,84 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
-<head>
-  <link href="http://gmpg.org/xfn/11" rel="profile">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-
-  <title>Using MongoDB Backend Service with Go App in the Swisscom App Cloud &middot; breml</title>
-
-  
-  <link rel="stylesheet" href="https://breml.github.io/css/poole.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/hyde.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/poole-overrides.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/hyde-overrides.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/hyde-x.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/breml.css">
-  <link rel="stylesheet" href="https://breml.github.io/css/highlight/sunburst.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-
-  
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://breml.github.io/touch-icon-144-precomposed.png">
-  <link href="https://breml.github.io/favicon.png" rel="icon">
-
-  
-  
-  
-  
-
-  <meta name="description" content="Howto use MongoDB backend service with a Go/Golang App in the Swisscom App Cloud.">
-  <meta name="keywords" content="Lucas breml Bremgartner blog">
-  <link rel="author" href="http://plus.google.com/101218494353589513841">
-</head>
-<body class="theme-base-0d">
-<div class="sidebar">
-  <div class="container sidebar-sticky">
-    <div class="sidebar-about">
-      <a href="https://breml.github.io/"><img src="https://www.gravatar.com/avatar/ffc66df1e22b19865762dc6dc8129ae8?s=200" alt="gravatar"></a>
-      <h1>breml</h1>
-      <p class="lead">my thoughts about&hellip;</p>
-    </div>
-
-    <ul class="sidebar-nav">
-      <li class="sidebar-nav-item"><a href="https://breml.github.io/">Blog</a></li>
-      
-      <li class="sidebar-nav-item"><a href="https://breml.github.io/about/">About</a></li>
-      
-    </ul>
-
-    <p>Categories:<br>
-    
-    <a class="label" href="/categories/bpf">bpf</a>
-    
-    <a class="label" href="/categories/elasticsearch">elasticsearch</a>
-    
-    <a class="label" href="/categories/git">git</a>
-    
-    <a class="label" href="/categories/gogitignore">gogitignore</a>
-    
-    <a class="label" href="/categories/golang">golang</a>
-    
-    <a class="label" href="/categories/sflow">sflow</a>
-    
-    </p>
-
-
-    <ul class="sidebar-nav">
-      <li class="sidebar-nav-item">
-      <a href="https://github.com/breml" target="_blank"><i class="fa fa-github-square fa-3x"></i></a>
-      
-      <a href="https://www.linkedin.com/in/lucas-bremgartner-96b477" target="_blank"><i class="fa fa-linkedin-square fa-3x"></i></a>
-      
-      
-      
-      <a href="https://twitter.com/_breml_" target="_blank"><i class="fa fa-twitter-square fa-3x"></i></a>
-      <a href="https://www.xing.com/profile/Lucas_Bremgartner" target="_blank"><i class="fa fa-xing-square fa-3x"></i></a>
-      
-      <a href="" type="application/rss+xml" target="_blank"><i class="fa fa-rss-square fa-3x"></i></a>
-      </li>
-    </ul>
-
-    
-
-    <p>Copyright &copy; 2016 <a href="https://breml.github.io/license/">License</a></p>
-  </div>
-</div>
-
-
-<div class="content container">
-  <div class="post">
-    <h1>Using MongoDB Backend Service with Go App in the Swisscom App Cloud</h1>
-    <span class="post-date">Dec 22, 2015 
-    
-    <br/>
-    <a class="label" href="https://breml.github.io/categories/golang">Golang</a>
-    </span>
-    
-
-<h2 id="introduction:0e124371b869ebbf7d75881dc4fcca46">Introduction</h2>
-
-<p>In my <a href="/blog/2015/12/17/deploy-a-go-web-app-to-the-swisscom-application-cloud/">last post</a> I described how to create and deploy an app, written with the Google <a href="https://golang.org" target="_blank">Go</a> language, to the <a href="http://developer.swisscom.com/" target="_blank">Swisscom Application Cloud</a>. This post is a follow up, in which I would like to share some of the learnings, I discovered while extending the <a href="https://github.com/breml/appcloud/tree/helloworld" target="_blank">Hello World</a> app, following the ideas for the <a href="https://ict.swisscom.ch/2015/12/move-with-your-mongodb-node-js-into-the-cloud/" target="_blank">node.js example</a>.</p>
-
-<p>This blog post is not a detailed step by step tutorial, but rather points out the in my opinion important steps to understand how to get a Go app running in the App Cloud with a MongoDB backend. I strongly suggest to read the above linked blog posts as well, as they help to get a better overall understanding.<br />
-The full working example could be found in my <a href="https://github.com/breml/appcloud" target="_blank">Github repository</a>.</p>
-
-<p>Like in my last post, the described steps assume to be executed on a Linux system, precisely on <a href="http://www.ubuntu.com/" target="_blank">Ubuntu</a>.</p>
-
-<h2 id="add-mongodb-as-backend-to-the-app:0e124371b869ebbf7d75881dc4fcca46">Add MongoDB as Backend to the App</h2>
-
-<p>To be able to locally test the extended version of our app you need a <a href="https://www.mongodb.org/" target="_blank">MongoDB</a> installation. On most Linux distributions MongoDB might be installed from the respective repository with the packet manager of choice. In my case, a simple</p>
-
-<pre><code class="language-bash">sudo apt-get install mongodb
-</code></pre>
-
-<p>does the job. This installs version 2.4.9 of MongoDB. As I found out later, the MongoDB version in use in the Swisscom App Cloud is 3.0.6 (as of writing). Unfortunately the MongoDB client with version 2.4.9 is not compatible with server version 3.0.6, especially if authentication is used. More on this topic later.</p>
-
-<p>On Ubuntu the MongoDB daemon gets started automatically after installation. On other Linux distributions, this may require a manual start.</p>
-
-<h2 id="connect-a-go-app-to-mongodb:0e124371b869ebbf7d75881dc4fcca46">Connect a Go App to MongoDB</h2>
-
-<p>As MongoDB driver package I have chosen <a href="https://gopkg.in/mgo.v2" target="_blank">gopkg.in/mgo.v2</a> which you may get with the following command:</p>
-
-<pre><code class="language-bash">go get gopkg.in/mgo.v2
-</code></pre>
-
-<p>On <a href="https://godoc.org/gopkg.in/mgo.v2" target="_blank">godoc.org</a> you find the documentation of the <em>mgo.v2</em> package. The main parts for the usage in our app are the following (only relevant sections, find the complete project on <a href="https://github.com/breml/appcloud" target="_blank">Github</a>).</p>
-
-<p>Insert a new value (while deleting the old):</p>
-
-<pre><code class="language-go">session, err := mgo.Dial(&quot;mongodb://localhost:27017/weatherDB&quot;)
-if err != nil {
-	log.Printf(&quot;MongoDB dial err %v\n&quot;, err)
+<!doctype html><html xmlns=http://www.w3.org/1999/xhtml xml:lang=en lang=en-us><head><link href=http://gmpg.org/xfn/11 rel=profile><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><title>Using MongoDB Backend Service with Go App in the Swisscom App Cloud &#183; breml</title><meta name=description content="Howto use MongoDB backend service with a Go/Golang App in the Swisscom App Cloud."><meta name=keywords content="Lucas breml Bremgartner blog"><link rel=stylesheet href=https://breml.github.io/css/poole.css><link rel=stylesheet href=https://breml.github.io/css/hyde.css><link rel=stylesheet href=https://breml.github.io/css/poole-overrides.css><link rel=stylesheet href=https://breml.github.io/css/hyde-overrides.css><link rel=stylesheet href=https://breml.github.io/css/hyde-x.css><link rel=stylesheet href=https://breml.github.io/css/breml.css><link rel=stylesheet href=https://breml.github.io/css/highlight/sunburst.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface"><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=apple-touch-icon-precomposed sizes=144x144 href=https://breml.github.io/touch-icon-144-precomposed.png><link href=https://breml.github.io/favicon.png rel=icon></head><body class=theme-base-0d><div class=sidebar><div class="container sidebar-sticky"><div class=sidebar-about><a href=https://breml.github.io/><img src="https://www.gravatar.com/avatar/ffc66df1e22b19865762dc6dc8129ae8?s=200" alt=gravatar><h1>breml</h1></a><p class=lead>my thoughts about&mldr;</p></div><ul class=sidebar-nav><li class=sidebar-nav-item><a href=https://breml.github.io/>Blog</a></li><li class=sidebar-nav-item><a href=https://breml.github.io/about/>About</a></li></ul><ul class=sidebar-nav><li class=sidebar-nav-item><a href=https://github.com/breml target=_blank><i class="fa fa-github-square fa-3x"></i></a><a href=https://www.linkedin.com/in/lucas-bremgartner-96b477 target=_blank><i class="fa fa-linkedin-square fa-3x"></i></a><a href=https://twitter.com/_breml_ target=_blank><i class="fa fa-twitter-square fa-3x"></i></a><a href=https://www.xing.com/profile/Lucas_Bremgartner target=_blank><i class="fa fa-xing-square fa-3x"></i></a><a href type=application/rss+xml target=_blank><i class="fa fa-rss-square fa-3x"></i></a></li></ul><p>Categories:<br><a class=label href=/categories/bpf>bpf</a>
+<a class=label href=/categories/elasticsearch>elasticsearch</a>
+<a class=label href=/categories/git>git</a>
+<a class=label href=/categories/gogitignore>gogitignore</a>
+<a class=label href=/categories/golang>golang</a>
+<a class=label href=/categories/sflow>sflow</a></p><p>Copyright &copy; 2020 <a href=https://breml.github.io/license/>License</a></p></div></div><div class="content container"><div class=post><h1>Using MongoDB Backend Service with Go App in the Swisscom App Cloud</h1><span class=post-date>Dec 22, 2015<br><a class=label href=https://breml.github.io/categories/golang>Golang</a></span><h2 id=introduction>Introduction</h2><p>In my <a href=/blog/2015/12/17/deploy-a-go-web-app-to-the-swisscom-application-cloud/>last post</a> I described how to create and deploy an app, written with the Google <a href=https://golang.org>Go</a> language, to the <a href=http://developer.swisscom.com/>Swisscom Application Cloud</a>. This post is a follow up, in which I would like to share some of the learnings, I discovered while extending the <a href=https://github.com/breml/appcloud/tree/helloworld>Hello World</a> app, following the ideas for the <a href=https://ict.swisscom.ch/2015/12/move-with-your-mongodb-node-js-into-the-cloud/>node.js example</a>.</p><p>This blog post is not a detailed step by step tutorial, but rather points out the in my opinion important steps to understand how to get a Go app running in the App Cloud with a MongoDB backend. I strongly suggest to read the above linked blog posts as well, as they help to get a better overall understanding.<br>The full working example could be found in my <a href=https://github.com/breml/appcloud>Github repository</a>.</p><p>Like in my last post, the described steps assume to be executed on a Linux system, precisely on <a href=http://www.ubuntu.com/>Ubuntu</a>.</p><h2 id=add-mongodb-as-backend-to-the-app>Add MongoDB as Backend to the App</h2><p>To be able to locally test the extended version of our app you need a <a href=https://www.mongodb.org/>MongoDB</a> installation. On most Linux distributions MongoDB might be installed from the respective repository with the packet manager of choice. In my case, a simple</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>sudo apt-get install mongodb
+</code></pre></div><p>does the job. This installs version 2.4.9 of MongoDB. As I found out later, the MongoDB version in use in the Swisscom App Cloud is 3.0.6 (as of writing). Unfortunately the MongoDB client with version 2.4.9 is not compatible with server version 3.0.6, especially if authentication is used. More on this topic later.</p><p>On Ubuntu the MongoDB daemon gets started automatically after installation. On other Linux distributions, this may require a manual start.</p><h2 id=connect-a-go-app-to-mongodb>Connect a Go App to MongoDB</h2><p>As MongoDB driver package I have chosen <a href=https://gopkg.in/mgo.v2>gopkg.in/mgo.v2</a> which you may get with the following command:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>go get gopkg.in/mgo.v2
+</code></pre></div><p>On <a href=https://godoc.org/gopkg.in/mgo.v2>godoc.org</a> you find the documentation of the <em>mgo.v2</em> package. The main parts for the usage in our app are the following (only relevant sections, find the complete project on <a href=https://github.com/breml/appcloud>Github</a>).</p><p>Insert a new value (while deleting the old):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>session</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>mgo</span>.<span style=color:#a6e22e>Dial</span>(<span style=color:#e6db74>&#34;mongodb://localhost:27017/weatherDB&#34;</span>)
+<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+  <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;MongoDB dial err %v\n&#34;</span>, <span style=color:#a6e22e>err</span>)
 }
-defer session.Close()
+<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>Close</span>()
 
-c := session.DB(&quot;weatherDB&quot;).C(&quot;weatherCOLL&quot;)
+<span style=color:#a6e22e>c</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>DB</span>(<span style=color:#e6db74>&#34;weatherDB&#34;</span>).<span style=color:#a6e22e>C</span>(<span style=color:#e6db74>&#34;weatherCOLL&#34;</span>)
 
-err = c.DropCollection()
-if err != nil {
-	log.Printf(&quot;MongoDB drop collection err %v\n&quot;, err)
+<span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>DropCollection</span>()
+<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+  <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;MongoDB drop collection err %v\n&#34;</span>, <span style=color:#a6e22e>err</span>)
 }
 
-err = c.Insert(Temperature{Temperature: temperature})
-if err != nil {
-	log.Printf(&quot;MongoDB insert err %v\n&quot;, err)
-} 
-</code></pre>
-
-<p>And querying the saved value:</p>
-
-<pre><code class="language-go">session, err := mgo.Dial(&quot;mongodb://localhost:27017/weatherDB&quot;)
-if err != nil {
-	log.Printf(&quot;MongoDB dial err %v\n&quot;, err)
+<span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Insert</span>(<span style=color:#a6e22e>Temperature</span>{<span style=color:#a6e22e>Temperature</span>: <span style=color:#a6e22e>temperature</span>})
+<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+  <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;MongoDB insert err %v\n&#34;</span>, <span style=color:#a6e22e>err</span>)
 }
-defer session.Close()
-
-c := session.DB(&quot;weatherDB&quot;).C(&quot;weatherCOLL&quot;)
-
-var result Temperature
-
-err = c.Find(nil).One(&amp;result)
-if err != nil {
-	log.Printf(&quot;MongoDB find err %v\n&quot;, err)
+</code></pre></div><p>And querying the saved value:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>session</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>mgo</span>.<span style=color:#a6e22e>Dial</span>(<span style=color:#e6db74>&#34;mongodb://localhost:27017/weatherDB&#34;</span>)
+<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+  <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;MongoDB dial err %v\n&#34;</span>, <span style=color:#a6e22e>err</span>)
 }
-</code></pre>
+<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>Close</span>()
 
-<h2 id="preparing-the-app-for-the-cloud:0e124371b869ebbf7d75881dc4fcca46">Preparing the App for the Cloud</h2>
+<span style=color:#a6e22e>c</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>DB</span>(<span style=color:#e6db74>&#34;weatherDB&#34;</span>).<span style=color:#a6e22e>C</span>(<span style=color:#e6db74>&#34;weatherCOLL&#34;</span>)
 
-<p>As you already know from the previous post, in the App Cloud the configuration (e. g. port to bind, connection details for the backend services) are provided by environment variables. In the &ldquo;Hello World&rdquo; example from the first post, the only information, we needed to get from the environment was the port to bind. In this example we used the <em>os</em> package from the Go standard library to get the environment variable. The connection details for the MongoDB instance in the App Cloud will also be provided as environment variable, where the value is a <a href="http://json.org" target="_blank">JSON</a> document. It would be possible to parse this JSON document with the <em>encoding/json</em> package from the Go standard library, but luckily there is even an easier solution. Cloud Foundry provides the <a href="https://github.com/cloudfoundry-community/go-cfenv" target="_blank">go-cfenv</a> (<a href="https://godoc.org/github.com/cloudfoundry-community/go-cfenv" target="_blank">godoc.org</a>) Go package, which</p>
+<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>result</span> <span style=color:#a6e22e>Temperature</span>
 
-<blockquote>
-<p>&rdquo;&hellip; provides information about the current app deployed on Cloud Foundry, including any bound service(s).&rdquo;</p>
-</blockquote>
-
-<p>This is exactly what we need. Get the package as usual with:</p>
-
-<pre><code class="language-bash">go get github.com/cloudfoundry-community/go-cfenv
-</code></pre>
-
-<p>In the main function of our Go program we add:</p>
-
-<pre><code class="language-go">// Get settings from ENV if present (e. g. if in App Cloud)
-appEnv, err := cfenv.Current()
-if err == nil {
-	// Port to bind web app
-	port = strconv.Itoa(appEnv.Port)
-
-	name = appEnv.Name
-	log.SetPrefix(name + prefixDelim)
-
-	// MongoDB Service
-	mgoService, err := appEnv.Services.WithName(&quot;mongodb&quot;)
-	if err == nil {
-		var ok bool
-		mongouri, ok = mgoService.Credentials[&quot;uri&quot;].(string)
-		if !ok {
-			log.Fatalf(&quot;No valid MongoDB uri\n&quot;)
-		}
-		mongodb, ok = mgoService.Credentials[&quot;database&quot;].(string)
-		if !ok {
-			log.Fatalf(&quot;No valid MongoDB database\n&quot;)
-		}
-	}
+<span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Find</span>(<span style=color:#66d9ef>nil</span>).<span style=color:#a6e22e>One</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>result</span>)
+<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+  <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;MongoDB find err %v\n&#34;</span>, <span style=color:#a6e22e>err</span>)
 }
-</code></pre>
+</code></pre></div><h2 id=preparing-the-app-for-the-cloud>Preparing the App for the Cloud</h2><p>As you already know from the previous post, in the App Cloud the configuration (e. g. port to bind, connection details for the backend services) are provided by environment variables. In the &ldquo;Hello World&rdquo; example from the first post, the only information, we needed to get from the environment was the port to bind. In this example we used the <em>os</em> package from the Go standard library to get the environment variable. The connection details for the MongoDB instance in the App Cloud will also be provided as environment variable, where the value is a <a href=http://json.org>JSON</a> document. It would be possible to parse this JSON document with the <em>encoding/json</em> package from the Go standard library, but luckily there is even an easier solution. Cloud Foundry provides the <a href=https://github.com/cloudfoundry-community/go-cfenv>go-cfenv</a> (<a href=https://godoc.org/github.com/cloudfoundry-community/go-cfenv>godoc.org</a>) Go package, which</p><blockquote><p>&ldquo;&mldr; provides information about the current app deployed on Cloud Foundry, including any bound service(s).&rdquo;</p></blockquote><p>This is exactly what we need. Get the package as usual with:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>go get github.com/cloudfoundry-community/go-cfenv
+</code></pre></div><p>In the main function of our Go program we add:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// Get settings from ENV if present (e. g. if in App Cloud)
+</span><span style=color:#75715e></span><span style=color:#a6e22e>appEnv</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>cfenv</span>.<span style=color:#a6e22e>Current</span>()
+<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+  <span style=color:#75715e>// Port to bind web app
+</span><span style=color:#75715e></span>  <span style=color:#a6e22e>port</span> = <span style=color:#a6e22e>strconv</span>.<span style=color:#a6e22e>Itoa</span>(<span style=color:#a6e22e>appEnv</span>.<span style=color:#a6e22e>Port</span>)
 
-<p>The above code snipped processes all the relevant environment variables and puts them in Go structs, where we can access them easily.</p>
+  <span style=color:#a6e22e>name</span> = <span style=color:#a6e22e>appEnv</span>.<span style=color:#a6e22e>Name</span>
+  <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>SetPrefix</span>(<span style=color:#a6e22e>name</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>prefixDelim</span>)
 
-<h2 id="adding-a-mongodb-service:0e124371b869ebbf7d75881dc4fcca46">Adding a MongoDB Service</h2>
-
-<p>The steps, required to add MongoDB service to your App Cloud space are quite easy. You have the possibility to add the service in the <a href="https://console.developer.swisscom.com/" target="_blank">Developer Console</a> or you may use the command line. This assumes you already installed the <a href="ttps://github.com/cloudfoundry/cli/" target="_blank">Cloud Foundry CLI</a> tools and you logged in to the App Cloud with the CLI tools (see previous blog post).</p>
-
-<pre><code class="language-bash">cf create-service mongodb small mongodb
-</code></pre>
-
-<p>If your app is already existing in the App Cloud, for example by pushing the &ldquo;Hello World&rdquo; example, you may now bind the MongoDB service to your app:</p>
-
-<pre><code class="language-bash">cf bind-service DemoApp mongodb
-</code></pre>
-
-<h2 id="update-our-go-dependencies-with-godep:0e124371b869ebbf7d75881dc4fcca46">Update our Go Dependencies with Godep</h2>
-
-<p>Before we can push our updated app to the App Cloud, we have to update our dependencies with the <em>godep</em> tool, by running:</p>
-
-<pre><code class="language-bash">godep save -r
-</code></pre>
-
-<p>This will place the newly introduced Go packages (<em>gopkg.in/mgo.v2</em> and <em>github.com/cloudfoundry-community/go-cfenv</em>) including their dependencies into the <code>Godeps</code> folder and update the import statements accordingly.</p>
-
-<h2 id="push-the-updated-app-to-the-cloud:0e124371b869ebbf7d75881dc4fcca46">Push the Updated App to the Cloud</h2>
-
-<p>With the MongoDB service created, the binding between app and MongoDB service in place, the app prepared to read the configuration from the environment variables and our Go package dependencies updated, we are ready to push our updated app to the cloud by simply executing <code>cf push</code>. You may now access the updated app with your browser and enjoy playing with the weather.</p>
-
-<h2 id="directly-connect-to-mongodb-service-in-the-app-cloud:0e124371b869ebbf7d75881dc4fcca46">Directly Connect to MongoDB Service in the App Cloud</h2>
-
-<p>The Swisscom App Cloud allows to setup a &ldquo;network tunnel&rdquo; from your local machine to the backend services in the App Cloud. This requires the <em>Service Connector</em> plugin for the Cloud Foundry CLI tools. The installation is simple, to get the Linux 64 bit version of the plugin just execute:</p>
-
-<pre><code class="language-bash">cf install-plugin https://swisscom-plugin.scapp.io/linux64/swisscom-plugin
-</code></pre>
-
-<p>The list of the available pre-built plugins for the different platforms (Windows, OSX, 32 or 64 bit) is available in the chapter <a href="https://docs.developer.swisscom.com/services/services/managing-services.html#installation-service-connector" target="_blank">Managing Services</a> in the App Cloud documentation.</p>
-
-<p>Before we can open the network tunnel to the App Cloud, we have to create a so called service key on the respective service. This may be done with the following command, where &ldquo;local&rdquo; is the name of the newly created service key:</p>
-
-<pre><code class="language-bash">cf create-service-key mongodb local
-</code></pre>
-
-<p>To get the just created service key credentials execute:</p>
-
-<pre><code class="language-bash">cf service-key mongodb local
-</code></pre>
-
-<p>The above command prints something similar to:</p>
-
-<pre><code class="language-plain">{
- &quot;database&quot;: &quot;mxAa4xiVidUHrO48&quot;,
- &quot;database_uri&quot;: &quot;mongodb://PJq5jZbdp6Bqshmn:FSCEvxfMPgd62Q1Z@uncvb9blaeo7t3mw.service.consul:59629/mxAa4xiVidUHrO48&quot;,
- &quot;host&quot;: &quot;uncvb9blaeo7t3mw.service.consul&quot;,
- &quot;password&quot;: &quot;FSCEvxfMPgd62Q1Z&quot;,
- &quot;port&quot;: &quot;59629&quot;,
- &quot;uri&quot;: &quot;mongodb://PJq5jZbdp6Bqshmn:FSCEvxfMPgd62Q1Z@uncvb9blaeo7t3mw.service.consul:59629/mxAa4xiVidUHrO48&quot;,
- &quot;username&quot;: &quot;PJq5jZbdp6Bqshmn&quot;
+  <span style=color:#75715e>// MongoDB Service
+</span><span style=color:#75715e></span>  <span style=color:#a6e22e>mgoService</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>appEnv</span>.<span style=color:#a6e22e>Services</span>.<span style=color:#a6e22e>WithName</span>(<span style=color:#e6db74>&#34;mongodb&#34;</span>)
+  <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>ok</span> <span style=color:#66d9ef>bool</span>
+    <span style=color:#a6e22e>mongouri</span>, <span style=color:#a6e22e>ok</span> = <span style=color:#a6e22e>mgoService</span>.<span style=color:#a6e22e>Credentials</span>[<span style=color:#e6db74>&#34;uri&#34;</span>].(<span style=color:#66d9ef>string</span>)
+    <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>ok</span> {
+      <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;No valid MongoDB uri\n&#34;</span>)
+    }
+    <span style=color:#a6e22e>mongodb</span>, <span style=color:#a6e22e>ok</span> = <span style=color:#a6e22e>mgoService</span>.<span style=color:#a6e22e>Credentials</span>[<span style=color:#e6db74>&#34;database&#34;</span>].(<span style=color:#66d9ef>string</span>)
+    <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>ok</span> {
+      <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;No valid MongoDB database\n&#34;</span>)
+    }
+  }
 }
-</code></pre>
-
-<p>With the credentials at hand, we may now setup the network tunnel by executing (replace [host] and [port] according to the generated credentials in the service key):</p>
-
-<pre><code class="language-plain">cf service-connector 13000 [host]:[port]
-</code></pre>
-
-<p>The above command will not exit until receiving SIGINT, normally sent by <code>Ctrl+C</code>. While running, it will listen on the provided port, in the above example port 13000. We now can connect with our local MongoDB client to this local port, which will forward our connection to the MongoDB instance in the App Cloud (replace [username], [database] and [password] according to the generated credentials in the service key):</p>
-
-<pre><code class="language-plain">mongo -username [username] -host localhost -port 13000 [database] -password [password]
-</code></pre>
-
-<p>The password may be omitted in the above command, in this case the password will be prompted, which prevents from leaking sensitive information to the process list or the shell history.</p>
-
-<p>As mentioned in the section about the MongoDB installation, the above command didn&rsquo;t work for me in the first place. It always throwed the following error:</p>
-
-<pre><code class="language-plain">MongoDB shell version: 2.4.9
+</code></pre></div><p>The above code snipped processes all the relevant environment variables and puts them in Go structs, where we can access them easily.</p><h2 id=adding-a-mongodb-service>Adding a MongoDB Service</h2><p>The steps, required to add MongoDB service to your App Cloud space are quite easy. You have the possibility to add the service in the <a href=https://console.developer.swisscom.com/>Developer Console</a> or you may use the command line. This assumes you already installed the <a href=ttps://github.com/cloudfoundry/cli/>Cloud Foundry CLI</a> tools and you logged in to the App Cloud with the CLI tools (see previous blog post).</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>cf create-service mongodb small mongodb
+</code></pre></div><p>If your app is already existing in the App Cloud, for example by pushing the &ldquo;Hello World&rdquo; example, you may now bind the MongoDB service to your app:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>cf bind-service DemoApp mongodb
+</code></pre></div><h2 id=update-our-go-dependencies-with-godep>Update our Go Dependencies with Godep</h2><p>Before we can push our updated app to the App Cloud, we have to update our dependencies with the <em>godep</em> tool, by running:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>godep save -r
+</code></pre></div><p>This will place the newly introduced Go packages (<em>gopkg.in/mgo.v2</em> and <em>github.com/cloudfoundry-community/go-cfenv</em>) including their dependencies into the <code>Godeps</code> folder and update the import statements accordingly.</p><h2 id=push-the-updated-app-to-the-cloud>Push the Updated App to the Cloud</h2><p>With the MongoDB service created, the binding between app and MongoDB service in place, the app prepared to read the configuration from the environment variables and our Go package dependencies updated, we are ready to push our updated app to the cloud by simply executing <code>cf push</code>. You may now access the updated app with your browser and enjoy playing with the weather.</p><h2 id=directly-connect-to-mongodb-service-in-the-app-cloud>Directly Connect to MongoDB Service in the App Cloud</h2><p>The Swisscom App Cloud allows to setup a &ldquo;network tunnel&rdquo; from your local machine to the backend services in the App Cloud. This requires the <em>Service Connector</em> plugin for the Cloud Foundry CLI tools. The installation is simple, to get the Linux 64 bit version of the plugin just execute:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>cf install-plugin https://swisscom-plugin.scapp.io/linux64/swisscom-plugin
+</code></pre></div><p>The list of the available pre-built plugins for the different platforms (Windows, OSX, 32 or 64 bit) is available in the chapter <a href=https://docs.developer.swisscom.com/services/services/managing-services.html#installation-service-connector>Managing Services</a> in the App Cloud documentation.</p><p>Before we can open the network tunnel to the App Cloud, we have to create a so called service key on the respective service. This may be done with the following command, where &ldquo;local&rdquo; is the name of the newly created service key:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>cf create-service-key mongodb local
+</code></pre></div><p>To get the just created service key credentials execute:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>cf service-key mongodb local
+</code></pre></div><p>The above command prints something similar to:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-plain data-lang=plain>{
+  &#34;database&#34;: &#34;mxAa4xiVidUHrO48&#34;,
+  &#34;database_uri&#34;: &#34;mongodb://PJq5jZbdp6Bqshmn:FSCEvxfMPgd62Q1Z@uncvb9blaeo7t3mw.service.consul:59629/mxAa4xiVidUHrO48&#34;,
+  &#34;host&#34;: &#34;uncvb9blaeo7t3mw.service.consul&#34;,
+  &#34;password&#34;: &#34;FSCEvxfMPgd62Q1Z&#34;,
+  &#34;port&#34;: &#34;59629&#34;,
+  &#34;uri&#34;: &#34;mongodb://PJq5jZbdp6Bqshmn:FSCEvxfMPgd62Q1Z@uncvb9blaeo7t3mw.service.consul:59629/mxAa4xiVidUHrO48&#34;,
+  &#34;username&#34;: &#34;PJq5jZbdp6Bqshmn&#34;
+}
+</code></pre></div><p>With the credentials at hand, we may now setup the network tunnel by executing (replace [host] and [port] according to the generated credentials in the service key):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>cf service-connector <span style=color:#ae81ff>13000</span> <span style=color:#f92672>[</span>host<span style=color:#f92672>]</span>:<span style=color:#f92672>[</span>port<span style=color:#f92672>]</span>
+</code></pre></div><p>The above command will not exit until receiving SIGINT, normally sent by <code>Ctrl+C</code>. While running, it will listen on the provided port, in the above example port 13000. We now can connect with our local MongoDB client to this local port, which will forward our connection to the MongoDB instance in the App Cloud (replace [username], [database] and [password] according to the generated credentials in the service key):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>mongo -username <span style=color:#f92672>[</span>username<span style=color:#f92672>]</span> -host localhost -port <span style=color:#ae81ff>13000</span> <span style=color:#f92672>[</span>database<span style=color:#f92672>]</span> -password <span style=color:#f92672>[</span>password<span style=color:#f92672>]</span>
+</code></pre></div><p>The password may be omitted in the above command, in this case the password will be prompted, which prevents from leaking sensitive information to the process list or the shell history.</p><p>As mentioned in the section about the MongoDB installation, the above command didn&rsquo;t work for me in the first place. It always throwed the following error:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-plain data-lang=plain>MongoDB shell version: 2.4.9
 connecting to: localhost:13000/mxAa4xiVidUHrO48
-Mon Dec 21 22:06:39.495 Error: 18 { ok: 0.0, errmsg: &quot;auth failed&quot;, code: 18 } at src/mongo/shell/db.js:228
+Mon Dec 21 22:06:39.495 Error: 18 { ok: 0.0, errmsg: &#34;auth failed&#34;, code: 18 } at src/mongo/shell/db.js:228
 exception: login failed
-</code></pre>
-
-<p>This error message didn&rsquo;t disappear until I updated my local MongoDB installation to a more recent version. For this update I followed the instructions in the <a href="https://docs.mongodb.org/v3.0/tutorial/install-mongodb-on-ubuntu/" target="_blank">Install MongoDB on Ubuntu tutorial</a>.</p>
-
-  </div>
-  
-</div>
-
-
-
-
-<script src="https://breml.github.io/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-<script>
-  var _gaq=[['_setAccount','UA-68498959-1'],['_trackPageview']];
-  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-  s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
-
-</body>
-</html>
-
+</code></pre></div><p>This error message didn&rsquo;t disappear until I updated my local MongoDB installation to a more recent version. For this update I followed the instructions in the <a href=https://docs.mongodb.org/v3.0/tutorial/install-mongodb-on-ubuntu/>Install MongoDB on Ubuntu tutorial</a>.</p></div></div><script src=https://breml.github.io/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script><script>var _gaq=[['_setAccount','UA-68498959-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'));</script></body></html>

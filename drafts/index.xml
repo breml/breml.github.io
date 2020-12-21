@@ -1,39 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Drafts on breml&#39;s blog</title>
-    <link>https://breml.github.io/drafts/</link>
-    <description>Recent content in Drafts on breml&#39;s blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <atom:link href="https://breml.github.io/drafts/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title></title>
-      <link>https://breml.github.io/drafts/peg%20in%20go/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://breml.github.io/drafts/peg%20in%20go/</guid>
-      <description>
-
-&lt;h1 id=&#34;peg-in-go:77a9b048611e4074858c3efc37b31959&#34;&gt;PEG in Go&lt;/h1&gt;
-
-&lt;h2 id=&#34;error-handling:77a9b048611e4074858c3efc37b31959&#34;&gt;Error Handling&lt;/h2&gt;
-
-&lt;p&gt;Error Branch with /
-Return Error
-Panic if not recoverable&lt;/p&gt;
-
-&lt;p&gt;Steht der Error Stack zu verfügung im Parser? Können Fehler zurückgesetzt werden?&lt;/p&gt;
-
-&lt;p&gt;Customized Errors zurück geben:
-Missing Keyword/Keyword expected error, Keyword in Field
-Missing closing xy (&amp;ldquo;, ), usw.)
-Expected Blockstart Element, usw.&lt;/p&gt;
-
-&lt;p&gt;Wie sind die lesbaren Rulenames nutzbar?&lt;/p&gt;
-</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Drafts on breml's blog</title><link>https://breml.github.io/drafts/</link><description>Recent content in Drafts on breml's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://breml.github.io/drafts/index.xml" rel="self" type="application/rss+xml"/><item><title/><link>https://breml.github.io/drafts/about_new/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/about_new/</guid><description>https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud https://www.youtube.com/watch?v=REsBjdhUbWo
+Update About in Blog
+Update Linkedin &amp;amp; Xing Profiles
+Add Blog Post about Logstash Config Parser
+And so on…</description></item><item><title/><link>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</guid><description>Blog Post: Shave of TLS hand shake from Lambda execution time For connections to relational databases it is common to have some sort of connect command, which is used during program initialization (e.g connection pool) But what is the equivalent for modern, rest API based services? Does it also work with Slack connection?</description></item><item><title/><link>https://breml.github.io/drafts/peg-in-go/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/peg-in-go/</guid><description>PEG in Go Error Handling Error Branch with / Return Error Panic if not recoverable
+Steht der Error Stack zu verfügung im Parser? Können Fehler zurückgesetzt werden?
+Customized Errors zurück geben: Missing Keyword/Keyword expected error, Keyword in Field Missing closing xy (&amp;quot;, ), usw.) Expected Blockstart Element, usw.
+Wie sind die lesbaren Rulenames nutzbar?</description></item></channel></rss>
