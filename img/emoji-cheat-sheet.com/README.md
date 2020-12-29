@@ -8,14 +8,13 @@ A one pager listing the different emoji emoticons supported on
 [Trac](http://trac-hacks.org/wiki/TracEmojiPlugin),
 [Flowdock](https://www.flowdock.com/),
 [Sprint.ly](https://sprint.ly/),
-[Kandan](http://kandanapp.com/),
+[Kandan](http://getkandan.com/),
 [Textbox.io](http://textbox.io/),
 [Kippt](http://kippt.com),
 [Redmine](https://github.com/tmy/redmine_gemoji),
 [JabbR](http://about.jabbr.net/),
 [Trello](https://trello.com/),
 [Hall](https://hall.com/),
-[Plug.dj](http://plug.dj/),
 [Qiita](http://qiita.com/),
 [Zendesk](http://zendesk.com/),
 [Ruby-China](http://ruby-china.org/),
@@ -54,7 +53,17 @@ A one pager listing the different emoji emoticons supported on
 [Dokuwiki](https://github.com/squarefractal/githubemoji-dokuwiki),
 [Usersnap](https://usersnap.com),
 [Discord](https://discordapp.com/),
-& [Status Hero](https://statushero.com/)
+[Status Hero](https://statushero.com/),
+[Morfy](http://morfy.org/),
+[Gitter](https://gitter.im/),
+[Yellow](http://datenstrom.se/yellow/),
+[YouTube](https://youtube.com),
+[Habitica](https://habitica.com),
+[Mattermost](http://www.mattermost.org/),
+[Kanban Tool](http://kanbantool.com/)
+[Telegram](https://telegram.org/).
+[StackEdit](https://stackedit.io/).
+and [Chttr.co](https://chttr.co/).
 
 :point_right: Check them out at our home page: http://emoji-cheat-sheet.com.
 
@@ -66,18 +75,18 @@ You can see how this works in a snapshot of [public/index.html on line 154](http
 
 Currently there are very few synonyms in the cheat sheet and it would be great to add more to make it easier to search.
 
-Feel inspired? Do a pull request and add a synonym for you favourite emoji or maybe animal to one of the animals. :heart_eyes:
+Feel inspired? Do a pull request and add a synonym for your favourite emoji or maybe animal to one of the animals. :heart_eyes:
 
 ## Want to add emojis to your projects?
 
 * Ruby – [github.com/github/gemoji](https://github.com/github/gemoji), [github.com/jsw0528/rails_emoji](https://github.com/jsw0528/rails_emoji)
+* Ruby (+Rails) [github.com/ID25/rails_emoji_picker](https://github.com/ID25/rails_emoji_picker), [github.com/jollygoodcode/twemoji](https://github.com/jollygoodcode/twemoji)
 * Javascript (+node.js) – [github.com/kof/emoticons](https://github.com/kof/emoticons)
 * Javascript (+node.js) – [github.com/hassankhan/emojify.js](https://github.com/hassankhan/emojify.js)
 * Javascript (+node.js) - [github.com/henrikjoreteg/emoji-images.js](https://github.com/HenrikJoreteg/emoji-images.js)
-* Javascript (+node.js) - [github.com/frissdiegurke/emoji-parser](https://github.com/frissdiegurke/emoji-parser)
 * Objective-C – [https://github.com/diy/nsstringemojize](https://github.com/diy/nsstringemojize)
-* Java - [https://github.com/pepibumur/emojize](https://github.com/pepibumur/emojize)
 * Python - [https://github.com/carpedm20/emoji](https://github.com/carpedm20/emoji)
+* Swift - [https://github.com/onmyway133/Smile](https://github.com/onmyway133/Smile)
 
 ## Contributing
 
@@ -85,7 +94,7 @@ Feel inspired? Do a pull request and add a synonym for you favourite emoji or ma
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
+5. Submit a pull request and enjoy! :D
 
 ### Contributors
 

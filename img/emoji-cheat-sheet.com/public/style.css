@@ -15,6 +15,17 @@ h1 {
 a { color: inherit; }
   a:hover { color: #999; }
 
+@-webkit-keyframes fadeOut {
+    0% { opacity: 1; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
 ul {
   display: table;
   padding: 0 0 1em 1.5em;
@@ -23,12 +34,39 @@ ul {
     list-style: none;
     float: left;
     width: 330px;
-    margin-bottom: .5em; }
-    li .hover { margin-left: -4px; }
+    margin-bottom: .5em;
+    cursor: pointer; }
+    li:hover {
+      margin-left: -4px;
+      margin-right: 4px;
+    }
+      li div:after {
+        font-family: "Helvetica Neue", helvetica, arial, sans-serif;
+        margin-left: 5px;
+        padding: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        user-select: none;
+        -ms-user-select: none; }
+      li div.clipboardError:after {
+        content: 'Your browser does not support copy';
+        padding-right: 20px;
+        color: #B00;
+        animation-duration: 6s;
+        animation-name: fadeOut;
+        animation-iteration-count: 1; }
+      li div.copied:after {
+        content: 'Copied';
+        color: #63bf8a;
+        overflow: hidden;
+        animation-duration: .8s;
+        animation-name: fadeOut;
+        animation-iteration-count: 1; }
     li img {
       vertical-align: middle;
       height: 22px;
-      width: 22px; }
+      width: 22px;
+      margin-right: 7px; }
 
 @media screen and (max-width: 640px) {
   ul {
@@ -109,28 +147,6 @@ ul {
   left: 0;
   width: 1px;
   height: 1px; }
-
-.jnotify-container {
-  position: fixed;
-  top: 1em;
-  right: 1em;
-  z-index: 999; }
-  .jnotify-notification {
-    position: relative;
-    margin-bottom: .5em; }
-  .jnotify-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,.33);
-    border-radius: 10px; }
-  .jnotify-message {
-    position: relative;
-    padding: .5em 1em;
-    color: #fff;
-    font: inherit; }
 
 #campfire-sounds > li > a {
   text-decoration: none;
