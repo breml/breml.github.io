@@ -1,0 +1,72 @@
+<!doctype html><html xmlns=http://www.w3.org/1999/xhtml xml:lang=en lang=en-us><head><link href=http://gmpg.org/xfn/11 rel=profile><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><title>Detect Trojan Source Attack &#183; breml</title><meta name=description content="Detect Trojan Source Attack - Creation of bidichk and integration in golangci-lint - Talk at Bärner Go Meetup December 7th 2021"><meta name=keywords content="Trojan,Source,Attack,bidichk,golangci-lint"><link rel=stylesheet href=https://breml.github.io/css/poole.css><link rel=stylesheet href=https://breml.github.io/css/hyde.css><link rel=stylesheet href=https://breml.github.io/css/poole-overrides.css><link rel=stylesheet href=https://breml.github.io/css/hyde-overrides.css><link rel=stylesheet href=https://breml.github.io/css/hyde-x.css><link rel=stylesheet href=https://breml.github.io/css/breml.css><link rel=stylesheet href=https://breml.github.io/css/highlight/sunburst.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface"><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=apple-touch-icon-precomposed sizes=144x144 href=https://breml.github.io/touch-icon-144-precomposed.png><link href=https://breml.github.io/favicon.png rel=icon></head><body class=theme-base-0d><div class=sidebar><div class="container sidebar-sticky"><div class=sidebar-about><a href=https://breml.github.io/><img src="https://www.gravatar.com/avatar/ffc66df1e22b19865762dc6dc8129ae8?s=200" alt=gravatar><h1>breml</h1></a><p class=lead>my thoughts about&mldr;</p></div><ul class=sidebar-nav><li class=sidebar-nav-item><a href=https://breml.github.io/>Blog</a></li><li class=sidebar-nav-item><a href=https://breml.github.io/about/>About</a></li><li class=sidebar-nav-item><a href=https://breml.github.io/links/>Links</a></li></ul><ul class=sidebar-nav><li class=sidebar-nav-item><a href=https://github.com/breml target=_blank><i class="fa fa-github-square fa-3x"></i></a><a href=https://www.linkedin.com/in/lucas-bremgartner-96b477 target=_blank><i class="fa fa-linkedin-square fa-3x"></i></a><a href=https://twitter.com/_breml_ target=_blank><i class="fa fa-twitter-square fa-3x"></i></a><a href=https://www.xing.com/profile/Lucas_Bremgartner target=_blank><i class="fa fa-xing-square fa-3x"></i></a><a href type=application/rss+xml target=_blank><i class="fa fa-rss-square fa-3x"></i></a></li></ul><p>Categories:<br><a class=label href=/categories/bpf>bpf</a>
+<a class=label href=/categories/elasticsearch>elasticsearch</a>
+<a class=label href=/categories/git>git</a>
+<a class=label href=/categories/gogitignore>gogitignore</a>
+<a class=label href=/categories/golang>golang</a>
+<a class=label href=/categories/sflow>sflow</a></p><p>Copyright &copy; 2021 <a href=https://breml.github.io/license/>License</a></p></div></div><div class="content container"><div class=post><h1>Detect Trojan Source Attack</h1><span class=post-date>Dec 7, 2021<br><a class=label href=https://breml.github.io/categories/golang>golang</a></span><h2 id=what-is-the-trojan-source-attack>What is the Trojan Source Attack</h2><p>The <a href=https://www.trojansource.codes/ target=_blank>Trojan Source</a> attack became famous on
+November 1st 2021 by the paper <a href=https://www.trojansource.codes/trojan-source.pdf target=_blank>Trojan Source: Invisible Vulnerabilities</a>
+published by <a href=https://github.com/nickboucher target=_blank>Nicolas Boucher</a> and <a href=https://www.cl.cam.ac.uk/~rja14 target=_blank>Ross Anderson</a>
+and the then following coverage in the security and IT news sites (e.g. <a href=https://krebsonsecurity.com/2021/11/trojan-source-bug-threatens-the-security-of-all-code/ target=_blank>1</a>, <a href=https://www.schneier.com/blog/archives/2021/11/hiding-vulnerabilities-in-source-code.html target=_blank>2</a>, <a href=https://www.computerweekly.com/news/252508879/Businesses-and-governments-urged-to-take-action-over-Trojan-Source-supply-chain-attacks target=_blank>3</a>, <a href=https://www.zdnet.com/article/this-sneaky-trick-could-allow-attackers-to-hide-invisible-vulnerabilities-in-code/ target=_blank>4</a>, <a href=https://www.theregister.com/2021/11/01/trojan_source_language_reversal_unicode/ target=_blank>5</a>).
+The vulnerability is also listed as <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-42574" target=_blank>CVE-2021-42574</a>.</p><p>The core of the attack is to use Unicode control characters to reorder tokens in
+source code. These visually reordered tokens can be used to display logic that,
+while semantically correct, diverges from the logic presented by the logical
+ordering of source code tokens.</p><p>Compilers and interpreters adhere to the logical ordering of source code, not
+the visual order. The attack is to use control characters embedded in comments
+and strings to reorder source code characters in a way that changes its logic.</p><p>The vulnerability is confirmed for a series of wide spread programming languages
+including C, C++, C#, JavaScript, Java, Rust, Go, and Python. But it is suspected,
+that the attack works in most modern languages.</p><h3 id=example>Example</h3><p>With the hidden Unicode control character in the right spot, what the user
+sees (visual order) may look like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Go data-lang=Go><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;fmt&#34;</span>
+
+<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>accessLevel</span> = <span style=color:#e6db74>&#34;user&#34;</span>
+  <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>accessLevel</span> <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;user&#34;</span> { <span style=color:#75715e>// Check if admin
+</span><span style=color:#75715e></span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;You are an admin.&#34;</span>)
+  } <span style=color:#66d9ef>else</span> {
+    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;You are a user.&#34;</span>)
+  }
+}
+</code></pre></div><p>while at the same time, the compiler sees the following (logical order, hidden
+Unicode characters shown as <code>[U+nnnn]</code>):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Go data-lang=Go><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;fmt&#34;</span>
+
+<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>accessLevel</span> = <span style=color:#e6db74>&#34;user&#34;</span>
+  <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>accessLevel</span> <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;user[U+202E][U+2066]// Check if admin[U+2069][U+2066]&#34;</span> {
+    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;You are an admin.&#34;</span>)
+  } <span style=color:#66d9ef>else</span> {
+    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;You are a user.&#34;</span>)
+  }
+}
+</code></pre></div><p>In this case, the visual order read as if someone is not a <code>user</code>, he is an admin.
+But the compiled program will behave differently an make everyone an admin, because
+no user will ever have the accessLevel <code>user[U+202E][U+2066]// Check if admin[U+2069][U+2066]</code>.</p><h3 id=what-are-unicode-control-characters>What are Unicode control characters</h3><p>Unicode encoded text allows for <a href=https://en.wikipedia.org/wiki/Bidirectional_text target=_blank>bidirectional text</a>, that is text with sections
+that are read from left-to-right and other sections that are read from
+right-to-left (e.g. Arabic or Hebrew). The Bidirectional algorithm (short
+Bidi algorithm) translates the logical order (in memory, always from left-to-right)
+into the visual order.</p><p>Each Unicode character has a type describing its behavior in bidirectional text.
+The four types are: <em>strong</em>, <em>weak</em>, <em>neutral</em> and <em>explicit formatting</em>.</p><p>For the purpose of the attack, the characters of the last category, <em>explicit formatting</em>,
+are interesting, because these characters allow to direct the Bidi algorithm to
+modify its default behavior. This category is further divided into <em>marks</em>, <em>embeddings</em>,
+<em>isolates</em> and <em>overrides</em>.</p><p>The combination of <em>overrides</em> (override the direction) and the <em>isolates</em>
+(treat a section as isolated from its surroundings) allows to alter the visual
+order such that it differs significantly from the logical order, that is
+processed by the compiler.</p><h2 id=attack-mitigation-for-go>Attack mitigation for Go</h2><p>There are different approaches, on how attacks that use the Trojan Source attack
+vector can be detected:</p><ul><li>Fix the compilers / interpreters</li><li>Make the invisible, potentially harmful, Unicode characters visible<ul><li>in the editor/IDE</li><li>in the review tool</li></ul></li><li>Have a linter</li></ul><p>In <a href=https://research.swtch.com/trojan target=_blank>the compiler is the wrong place</a> Russ Cox (Go tech lead) explained,
+why this kind of issues will not be fixed in the Go compiler it self. It boils down
+to the fact, that it is impossible for a compiler to tell, whether some code is
+good or bad.</p><p>The better place to detect these kinds of attacks is to perform proper review
+and to use tools, that support humans in spotting suspicious Unicode. A lot has
+been done since the public release of the paper about the Trojan Source
+Vulnerability. For example Github provides hints about source code files, that
+contain hidden Unicode characters. Also editor like Visual Studio Code have been
+improved to make these Unicode characters visible.</p><p><img src=github.com-warning-hidden-unicode-characters.png alt="github.com warning about hidden unicode characters"></p><p><img src=vscode_shows_hidden_unicode_characters.png alt="Visual Studio Code shows hidden unicode characters"></p><p>With all these improvements, there is still (at least) one option remaining and
+this is to have a linter, that can check for the hidden Unicode characters at
+development time or in the continous integration system (CI).</p><p>This is where <a href=https://github.com/breml/bidichk target=_blank>bidichk</a> comes in.</p><h2 id=bidichk>bidichk</h2><p><code>bidichk</code> is a small linter for Go source code, that warns about occurences of
+hidden Unicode characters. By default it considers the following Unicode
+characters, as dangerous:</p><ul><li><code>U+202A</code>: LEFT-TO-RIGHT-EMBEDDING</li><li><code>U+202B</code>: RIGHT-TO-LEFT-EMBEDDING</li><li><code>U+202C</code>: POP-DIRECTIONAL-FORMATTING</li><li><code>U+202D</code>: LEFT-TO-RIGHT-OVERRIDE</li><li><code>U+202E</code>: RIGHT-TO-LEFT-OVERRIDE</li><li><code>U+2066</code>: LEFT-TO-RIGHT-ISOLATE</li><li><code>U+2067</code>: RIGHT-TO-LEFT-ISOLATE</li><li><code>U+2068</code>: FIRST-STRONG-ISOLATE</li><li><code>U+2069</code>: POP-DIRECTIONAL-ISOLATE</li></ul><p><code>bidichk</code> is also integrated in <a href=https://golangci-lint.run/ target=_blank>golangci-lint</a> and
+therefore the easiest way to take advantage of <code>bidichk</code> is to enable it in your
+<a href=https://golangci-lint.run/usage/configuration/#config-file target=_blank>golangci.yml</a> file.</p><h2 id=bärner-go-meetup>Bärner Go Meetup</h2><p>This topic has been part of the talk <em>Detect Trojan Source Attack</em> at the
+<a href=https://www.meetup.com/de-DE/Berner-Go-Meetup/ target=_blank>Bärner Go Meetup</a> on December 7th 2021.</p><p>The slides can be found <a href=Detect_Trojan_Source_Attack.pdf>here</a>.</p></div></div><script src=https://breml.github.io/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script><script>var _gaq=[['_setAccount','UA-68498959-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'));</script></body></html>
