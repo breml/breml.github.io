@@ -1,9 +1,33 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Drafts on breml's blog</title><link>https://breml.github.io/drafts/</link><description>Recent content in Drafts on breml's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://breml.github.io/drafts/index.xml" rel="self" type="application/rss+xml"/><item><title/><link>https://breml.github.io/drafts/about_new/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/about_new/</guid><description>https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud https://www.youtube.com/watch?v=REsBjdhUbWo
-Update About in Blog
-Update Linkedin &amp;amp; Xing Profiles
-Add Blog Post about Logstash Config Parser
-And so on…</description></item><item><title/><link>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</guid><description>Blog Post: Shave of TLS hand shake from Lambda execution time For connections to relational databases it is common to have some sort of connect command, which is used during program initialization (e.g connection pool) But what is the equivalent for modern, rest API based services? Does it also work with Slack connection?</description></item><item><title/><link>https://breml.github.io/drafts/integration-tests-env-var/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/integration-tests-env-var/</guid><description>Wieso env var
-better compatibility with most ide, because in most cases support for build tags is not great and they can confuse auto suggestion, etc. also other static code analysis tools like linters might have problems or not able to process the integration test files better usage of build cache, no need to recompile packages compatible with ./&amp;hellip; possible to have unit tests and integration tests in the same test file simple concept already used in other places for configuration, nothing new to learn better compatibility with other test wrappers like go-acc for measuring coverage.</description></item><item><title/><link>https://breml.github.io/drafts/peg-in-go/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/peg-in-go/</guid><description>PEG in Go Error Handling Error Branch with / Return Error Panic if not recoverable
-Steht der Error Stack zu verfügung im Parser? Können Fehler zurückgesetzt werden?
-Customized Errors zurück geben: Missing Keyword/Keyword expected error, Keyword in Field Missing closing xy (&amp;quot;, ), usw.) Expected Blockstart Element, usw.
-Wie sind die lesbaren Rulenames nutzbar?</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Drafts on breml's blog</title><link>https://breml.github.io/drafts/</link><description>Recent content in Drafts on breml's blog</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Mon, 01 Jan 0001 00:00:00 +0000</lastBuildDate><atom:link href="https://breml.github.io/drafts/index.xml" rel="self" type="application/rss+xml"/><item><title/><link>https://breml.github.io/drafts/about_new/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/about_new/</guid><description>&lt;p&gt;&lt;a href="https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud" target="_blank"&gt;https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud&lt;/a&gt;
+&lt;a href="https://www.youtube.com/watch?v=REsBjdhUbWo" target="_blank"&gt;https://www.youtube.com/watch?v=REsBjdhUbWo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Update About in Blog&lt;/p&gt;
+&lt;p&gt;Update Linkedin &amp;amp; Xing Profiles&lt;/p&gt;
+&lt;p&gt;Add Blog Post about Logstash Config Parser&lt;/p&gt;
+&lt;p&gt;And so on…&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</guid><description>&lt;h1 id="blog-post-shave-of-tls-hand-shake-from-lambda-execution-time"&gt;Blog Post: Shave of TLS hand shake from Lambda execution time&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;For connections to relational databases it is common to have some sort of connect command, which is used during program initialization (e.g connection pool)&lt;/li&gt;
+&lt;li&gt;But what is the equivalent for modern, rest API based services?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Does it also work with Slack connection?&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/integration-tests-env-var/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/integration-tests-env-var/</guid><description>&lt;p&gt;Wieso env var&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;better compatibility with most ide, because in most cases support for build tags is not great and they can confuse auto suggestion, etc.&lt;/li&gt;
+&lt;li&gt;also other static code analysis tools like linters might have problems or not able to process the integration test files&lt;/li&gt;
+&lt;li&gt;better usage of build cache, no need to recompile packages&lt;/li&gt;
+&lt;li&gt;compatible with ./&amp;hellip;&lt;/li&gt;
+&lt;li&gt;possible to have unit tests and integration tests in the same test file&lt;/li&gt;
+&lt;li&gt;simple concept already used in other places for configuration, nothing new to learn&lt;/li&gt;
+&lt;li&gt;better compatibility with other test wrappers like go-acc for measuring coverage.&lt;/li&gt;
+&lt;li&gt;through the usage of t.skip, the test might give a hint to the user in verbose mode, how to execute the integration tests.&lt;/li&gt;
+&lt;li&gt;maybe combine with -short flag&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href="https://stackoverflow.com/questions/25965584/separating-unit-tests-and-integration-tests-in-go/25970712" target="_blank"&gt;https://stackoverflow.com/questions/25965584/separating-unit-tests-and-integration-tests-in-go/25970712&lt;/a&gt;&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/peg-in-go/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/peg-in-go/</guid><description>&lt;h1 id="peg-in-go"&gt;PEG in Go&lt;/h1&gt;
+&lt;h2 id="error-handling"&gt;Error Handling&lt;/h2&gt;
+&lt;p&gt;Error Branch with /
+Return Error
+Panic if not recoverable&lt;/p&gt;
+&lt;p&gt;Steht der Error Stack zu verfügung im Parser? Können Fehler zurückgesetzt werden?&lt;/p&gt;
+&lt;p&gt;Customized Errors zurück geben:
+Missing Keyword/Keyword expected error, Keyword in Field
+Missing closing xy (&amp;quot;, ), usw.)
+Expected Blockstart Element, usw.&lt;/p&gt;
+&lt;p&gt;Wie sind die lesbaren Rulenames nutzbar?&lt;/p&gt;</description></item></channel></rss>

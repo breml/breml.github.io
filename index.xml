@@ -1,23 +1,260 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>breml's blog</title><link>https://breml.github.io/</link><description>Recent content on breml's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 07 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://breml.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Detect Trojan Source Attack</title><link>https://breml.github.io/blog/2021/12/07/detect-trojan-source-attack/</link><pubDate>Tue, 07 Dec 2021 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2021/12/07/detect-trojan-source-attack/</guid><description>What is the Trojan Source Attack The Trojan Source attack became famous on November 1st 2021 by the paper Trojan Source: Invisible Vulnerabilities published by Nicolas Boucher and Ross Anderson and the then following coverage in the security and IT news sites (e.g. 1, 2, 3, 4, 5). The vulnerability is also listed as CVE-2021-42574.
-The core of the attack is to use Unicode control characters to reorder tokens in source code.</description></item><item><title>Embed CA Root Certificates in Go Programs</title><link>https://breml.github.io/blog/2021/01/17/embed-ca-root-certificates-in-go-programs/</link><pubDate>Sun, 17 Jan 2021 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2021/01/17/embed-ca-root-certificates-in-go-programs/</guid><description>Abstract Package rootcerts provides an embedded copy of the Mozilla Included CA Certificate List, more specifically the PEM of Root Certificates in Mozilla&amp;amp;rsquo;s Root Store with the Websites (TLS/SSL) Trust Bit Enabled. If this package is imported anywhere in the program and the crypto/x509 package cannot find the system certificate pool, it will use the embedded certificates instead.
-Background In my professional work as well as in my private projects I often deploy Go programs as containers.</description></item><item><title>About</title><link>https://breml.github.io/about/</link><pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate><guid>https://breml.github.io/about/</guid><description>Who I am My name is Lucas Bremgartner. In cyberspace I mostly use my nick name breml. I life with my wife and two childern in Switzerland. I have a bachelor degree in information technology and a master of applied science degree in information security and I have more than 20 years experience in IT.
-But IT is not everything. One of the most important things about me is ♥ ❌ ✝ ?</description></item><item><title>Comment Elasticsearch Mapping</title><link>https://breml.github.io/blog/2016/09/12/comment-elasticsearch-mapping/</link><pubDate>Mon, 12 Sep 2016 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2016/09/12/comment-elasticsearch-mapping/</guid><description>If you have worked with large Elasticsearch mappings you may also have encountered the problem, that there is no possibility to comment your mapping or indexing template. Unfortunately the Elasticsearch mappings as well as the indexing templates are defined in JSON, which does not allow to add comments.
-I thought the same, until I stumbled over Elasticsearch issue 1394 and the linked commit from January 2013, where a single line was added to the the configuration of the JSON factory:</description></item><item><title>Using MongoDB Backend Service with Go App in the Swisscom App Cloud</title><link>https://breml.github.io/blog/2015/12/22/using-mongodb-backend-service-with-go-app-in-the-swisscom-app-cloud/</link><pubDate>Tue, 22 Dec 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/12/22/using-mongodb-backend-service-with-go-app-in-the-swisscom-app-cloud/</guid><description>Introduction In my last post I described how to create and deploy an app, written with the Google Go language, to the Swisscom Application Cloud. This post is a follow up, in which I would like to share some of the learnings, I discovered while extending the Hello World app, following the ideas for the node.js example.
-This blog post is not a detailed step by step tutorial, but rather points out the in my opinion important steps to understand how to get a Go app running in the App Cloud with a MongoDB backend.</description></item><item><title>Deploy a Go Web App to the Swisscom Application Cloud</title><link>https://breml.github.io/blog/2015/12/17/deploy-a-go-web-app-to-the-swisscom-application-cloud/</link><pubDate>Thu, 17 Dec 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/12/17/deploy-a-go-web-app-to-the-swisscom-application-cloud/</guid><description>Inspired by the this blog post about the deployment of a node.js example app to the Swisscom Application Cloud, I decided to test the Swisscom Application Cloud my self with a similar app, written in Google Go language.
-This blog should take you through the essential steps on a Linux based system to push your own Go based app to a Cloud Foundry based app cloud, for example the one from Swisscom.</description></item><item><title>Tagging of dynamically added Fields in Elasticsearch</title><link>https://breml.github.io/blog/2015/10/28/tagging-of-dynamically-added-fields-in-elasticsearch/</link><pubDate>Wed, 28 Oct 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/10/28/tagging-of-dynamically-added-fields-in-elasticsearch/</guid><description>At work we use the ELK Stack (Elasticsearch, Logstash and Kibana) to process, store and visualize all kind of log data. To get the most out of the information stored in Elasticsearch, we maintain a handcrafted Elasticsearch mapping.
-As we are in the process of continuously adding more and more log sources, now and then our Elasticsearch mapping is not complete. In this case the dynamic mapping feature of Elasticsearch adds these new fields by it&amp;rsquo;s own.</description></item><item><title>Dividable without remainder</title><link>https://breml.github.io/blog/2015/10/22/dividable-without-remainder/</link><pubDate>Thu, 22 Oct 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/10/22/dividable-without-remainder/</guid><description>Summary Problem For a &amp;ldquo;1 in n sampling&amp;rdquo; problem I was looking for a fast way to determine, if a value x (random number) is dividable by a previously known divisor d (sampling rate) without remainder. So the algorithm has to result with true in 1 of d cases, otherwise with false. x and d are both unsigned integers, in my case 32 bit long. Since the algorithm will be used for sampling and x is produced by a random number generator (see below: Motivation), a slight inaccuracy (&amp;lt; 0.</description></item><item><title>gogitignore</title><link>https://breml.github.io/blog/2015/10/06/gogitignore/</link><pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/10/06/gogitignore/</guid><description>The other day I extended one of my go (golang) project with some new main packages resulting in new commands. After building the project with go build the resulting executables are placed in the respective directories within the project. While updating the git repository I found it cumbersome to add all the new executables to the .gitignore-file. On linux there is unfortunately now easy way to exclude all executables within a project with a single line in .</description></item><item><title>License</title><link>https://breml.github.io/license/</link><pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/license/</guid><description>The content of this website / blog is unless otherwise stated licensed under a Creative Commons Attribution 4.0 International License &amp;lt;img src=&amp;#34;https://i.creativecommons.org/l/by/4.0/80x15.png&amp;#34; alt=&amp;#34;Creative Commons Attribution 4.0 International License&amp;#34;&amp;gt;
-Used components Powered by: Hugo: Simple Public License (SimPL) 2.0
-Template based on: Hyde-X: MIT License
-Source code highlighting: highlightjs: License
-Emoji icons from: emoji-cheet-sheet.com: License</description></item><item><title/><link>https://breml.github.io/drafts/about_new/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/about_new/</guid><description>https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud https://www.youtube.com/watch?v=REsBjdhUbWo
-Update About in Blog
-Update Linkedin &amp;amp; Xing Profiles
-Add Blog Post about Logstash Config Parser
-And so on…</description></item><item><title/><link>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</guid><description>Blog Post: Shave of TLS hand shake from Lambda execution time For connections to relational databases it is common to have some sort of connect command, which is used during program initialization (e.g connection pool) But what is the equivalent for modern, rest API based services? Does it also work with Slack connection?</description></item><item><title/><link>https://breml.github.io/drafts/integration-tests-env-var/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/integration-tests-env-var/</guid><description>Wieso env var
-better compatibility with most ide, because in most cases support for build tags is not great and they can confuse auto suggestion, etc. also other static code analysis tools like linters might have problems or not able to process the integration test files better usage of build cache, no need to recompile packages compatible with ./&amp;hellip; possible to have unit tests and integration tests in the same test file simple concept already used in other places for configuration, nothing new to learn better compatibility with other test wrappers like go-acc for measuring coverage.</description></item><item><title/><link>https://breml.github.io/drafts/peg-in-go/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/peg-in-go/</guid><description>PEG in Go Error Handling Error Branch with / Return Error Panic if not recoverable
-Steht der Error Stack zu verfügung im Parser? Können Fehler zurückgesetzt werden?
-Customized Errors zurück geben: Missing Keyword/Keyword expected error, Keyword in Field Missing closing xy (&amp;quot;, ), usw.) Expected Blockstart Element, usw.
-Wie sind die lesbaren Rulenames nutzbar?</description></item><item><title>Blogs</title><link>https://breml.github.io/bits/00_template/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/bits/00_template/</guid><description>+++ date = &amp;ldquo;1900-01-01&amp;rdquo; title = &amp;ldquo;Template&amp;rdquo; description = &amp;quot;&amp;quot; categories = [ &amp;ldquo;template&amp;rdquo; ] draft = true +++
-script to create a bit from the template with current time stamp (to the minute)</description></item><item><title>Blogs</title><link>https://breml.github.io/links/blogs/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/blogs/</guid><description> catonmat.net
-Online tools for lot of different data formats like JSON, CSV
-One liners for awk, sed, perl, bash, etc. Peter Bourgon Dave Cheney Mathias Lafeldt</description></item><item><title>Go Programming Language</title><link>https://breml.github.io/links/golang/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/golang/</guid><description>General Official Site of the Go Programming Language Go Standard Library Package Documentation Effective Go The Go Programming Language Specification Go Playground Go Dev Find Packages Discover Go Packages (pkg.go.dev) Awesome Go News / Newsletter Golang Weekly Gotime GoAtSpeed Gems from Go practitioners Practical Go, Dave Cheney Style guideline for Go packages, Jaana Dogan Go at Google: Language Design in the Service of Software Engineering, Rob Pike Blog by Peter Bourgon, Peter Bourgon Style Guides bahlo Go Styleguide Cockroach Go coding guidelines Gitlab Go standards and style guidelines Go Code Review Comments Hyperledger Coding guidelines magnetico Design Specification Go Programming Guidelines Sourcegraph Go style guide Uber Go Style Guide UK Government Digital Service Go style guide Thanos Coding Style Guide Golang Naming Conventions Cheat Sheet Know-how 50 Shades of Go: Traps, Gotchas, and Common Mistakes for New Golang Devs String Matching Linking golang statically Go Slices Go by Example Intro to generics Testing in Go: Test Doubles by Example A comprehensive guide to go generate Are you a Go black belt Coverage gocovmerge go-coverage-with-external-tests Courtney - meaningful test coverage Bincover - measure code coverage from a binary Online Tools The Go Playground Play with Go Rego - A Go regular expression tester GoDate.</description></item><item><title>Links</title><link>https://breml.github.io/links/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/</guid><description/></item><item><title>Shell and Scripting</title><link>https://breml.github.io/links/shell/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/shell/</guid><description>General Command Line Interface Guidelines Bash scripting quirks &amp;amp;amp; safety tips - Julia Evans Bash Minimal safe Bash script template Github gist of script template Fish Shell Fish Shell Linting ShellCheck</description></item><item><title>Tools</title><link>https://breml.github.io/links/tools/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/tools/</guid><description>Cheat Sheets Bash - Working Productively in Bash&amp;amp;rsquo;s Vi Command Line Editing Mode (with Cheat Sheet) Readline VI Editing Mode Cheat Sheet - Default Keyboard Shortcuts for Bash Bash History - The Definitive Guide to Bash Command Line History Bash History Cheat Sheet Git Cheat Sheet (Github) Github flavoured Markdown Github flavoured Markdown Syntax Markdown Syntax-Übersicht Markdown Cheatsheet (in Markdown) Slack tmux vi / vim graphical cheat sheet vim VIM Cheat Sheet for Programmers vim visual cheat sheet Vimperator cheat sheet Visual Studio Code - Keyboard Shortcuts Reference Visual Studio Code - Keyboard Shortcuts Reference for Linux Colaboration tmate - Instant terminal sharing Documentation Asciiflow - draw ascii graphics Mermaid - represent diagrams using text and code Live Editor Online Tools Debuggex - Visual Regular Expression Debugger regular expressions 101 dillinger.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>breml's blog</title><link>https://breml.github.io/</link><description>Recent content on breml's blog</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 07 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://breml.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Detect Trojan Source Attack</title><link>https://breml.github.io/blog/2021/12/07/detect-trojan-source-attack/</link><pubDate>Tue, 07 Dec 2021 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2021/12/07/detect-trojan-source-attack/</guid><description>&lt;h2 id="what-is-the-trojan-source-attack"&gt;What is the Trojan Source Attack&lt;/h2&gt;
+&lt;p&gt;The &lt;a href="https://www.trojansource.codes/" target="_blank"&gt;Trojan Source&lt;/a&gt; attack became famous on
+November 1st 2021 by the paper &lt;a href="https://www.trojansource.codes/trojan-source.pdf" target="_blank"&gt;Trojan Source: Invisible Vulnerabilities&lt;/a&gt;
+published by &lt;a href="https://github.com/nickboucher" target="_blank"&gt;Nicolas Boucher&lt;/a&gt; and &lt;a href="https://www.cl.cam.ac.uk/~rja14" target="_blank"&gt;Ross Anderson&lt;/a&gt;
+and the then following coverage in the security and IT news sites (e.g. &lt;a href="https://krebsonsecurity.com/2021/11/trojan-source-bug-threatens-the-security-of-all-code/" target="_blank"&gt;1&lt;/a&gt;, &lt;a href="https://www.schneier.com/blog/archives/2021/11/hiding-vulnerabilities-in-source-code.html" target="_blank"&gt;2&lt;/a&gt;, &lt;a href="https://www.computerweekly.com/news/252508879/Businesses-and-governments-urged-to-take-action-over-Trojan-Source-supply-chain-attacks" target="_blank"&gt;3&lt;/a&gt;, &lt;a href="https://www.zdnet.com/article/this-sneaky-trick-could-allow-attackers-to-hide-invisible-vulnerabilities-in-code/" target="_blank"&gt;4&lt;/a&gt;, &lt;a href="https://www.theregister.com/2021/11/01/trojan_source_language_reversal_unicode/" target="_blank"&gt;5&lt;/a&gt;).
+The vulnerability is also listed as &lt;a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-42574" target="_blank"&gt;CVE-2021-42574&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The core of the attack is to use Unicode control characters to reorder tokens in
+source code. These visually reordered tokens can be used to display logic that,
+while semantically correct, diverges from the logic presented by the logical
+ordering of source code tokens.&lt;/p&gt;</description></item><item><title>Embed CA Root Certificates in Go Programs</title><link>https://breml.github.io/blog/2021/01/17/embed-ca-root-certificates-in-go-programs/</link><pubDate>Sun, 17 Jan 2021 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2021/01/17/embed-ca-root-certificates-in-go-programs/</guid><description>&lt;h2 id="abstract"&gt;Abstract&lt;/h2&gt;
+&lt;p&gt;Package &lt;a href="https://github.com/breml/rootcerts" target="_blank"&gt;rootcerts&lt;/a&gt; provides an embedded copy of the
+&lt;a href="https://wiki.mozilla.org/CA/Included_Certificates" target="_blank"&gt;Mozilla Included CA Certificate List&lt;/a&gt;, more specifically the
+&lt;a href="https://ccadb-public.secure.force.com/mozilla/IncludedRootsPEMTxt?TrustBitsInclude=Websites" target="_blank"&gt;PEM of Root Certificates in Mozilla&amp;rsquo;s Root Store with the Websites (TLS/SSL) Trust Bit Enabled&lt;/a&gt;.
+If this package is imported anywhere in the program and the &lt;a href="https://golang.org/pkg/crypto/x509/" target="_blank"&gt;crypto/x509&lt;/a&gt; package cannot find the system certificate
+pool, it will use the embedded certificates instead.&lt;/p&gt;
+&lt;h2 id="background"&gt;Background&lt;/h2&gt;
+&lt;p&gt;In my professional work as well as in my private projects I often deploy Go programs as containers. Be it to run them
+in the cloud, in K8s or on your local machine. It is pretty common knowledge, how Go programs can be shipped in very
+light containers built from &lt;a href="https://docs.docker.com/develop/develop-images/baseimages/" target="_blank"&gt;scratch&lt;/a&gt;
+(e.g. &lt;a href="https://sebest.github.io/post/create-a-small-docker-image-for-a-golang-binary/" target="_blank"&gt;Create a small Docker image for a GoLang binary&lt;/a&gt;).&lt;/p&gt;</description></item><item><title>About</title><link>https://breml.github.io/about/</link><pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate><guid>https://breml.github.io/about/</guid><description>&lt;h2 id="who-i-am"&gt;Who I am&lt;/h2&gt;
+&lt;p&gt;My name is Lucas Bremgartner. In cyberspace I mostly use my nick name &lt;strong&gt;breml&lt;/strong&gt;. I life with my wife and two childern in Switzerland. I have a bachelor degree in information technology and a master of applied science degree in information security and I have more than 20 years experience in IT.&lt;/p&gt;
+&lt;p&gt;But IT is not everything. One of the most important things about me is &lt;a href="http://www.the4points.com/uk/" target="_blank"&gt;♥ ❌ ✝ ?&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>Comment Elasticsearch Mapping</title><link>https://breml.github.io/blog/2016/09/12/comment-elasticsearch-mapping/</link><pubDate>Mon, 12 Sep 2016 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2016/09/12/comment-elasticsearch-mapping/</guid><description>&lt;p&gt;If you have worked with large &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html" target="_blank"&gt;Elasticsearch mappings&lt;/a&gt; you may also have encountered the problem, that there is no possibility to comment your mapping or &lt;a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html" target="_blank"&gt;indexing template&lt;/a&gt;. Unfortunately the Elasticsearch mappings as well as the indexing templates are defined in JSON, which does not allow to add comments.&lt;/p&gt;
+&lt;p&gt;I thought the same, until I stumbled over &lt;a href="https://github.com/elastic/elasticsearch/issues/1394" target="_blank"&gt;Elasticsearch issue 1394&lt;/a&gt; and the linked &lt;a href="https://github.com/elastic/elasticsearch/commit/6f7253c5242e7fb94d959ce291c88f93887e3bde" target="_blank"&gt;commit from January 2013&lt;/a&gt;, where a single line was added to the the configuration of the JSON factory:&lt;/p&gt;</description></item><item><title>Using MongoDB Backend Service with Go App in the Swisscom App Cloud</title><link>https://breml.github.io/blog/2015/12/22/using-mongodb-backend-service-with-go-app-in-the-swisscom-app-cloud/</link><pubDate>Tue, 22 Dec 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/12/22/using-mongodb-backend-service-with-go-app-in-the-swisscom-app-cloud/</guid><description>&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;In my &lt;a href="https://breml.github.io/blog/2015/12/17/deploy-a-go-web-app-to-the-swisscom-application-cloud/"&gt;last post&lt;/a&gt; I described how to create and deploy an app, written with the Google &lt;a href="https://golang.org" target="_blank"&gt;Go&lt;/a&gt; language, to the &lt;a href="http://developer.swisscom.com/" target="_blank"&gt;Swisscom Application Cloud&lt;/a&gt;. This post is a follow up, in which I would like to share some of the learnings, I discovered while extending the &lt;a href="https://github.com/breml/appcloud/tree/helloworld" target="_blank"&gt;Hello World&lt;/a&gt; app, following the ideas for the &lt;a href="https://ict.swisscom.ch/2015/12/move-with-your-mongodb-node-js-into-the-cloud/" target="_blank"&gt;node.js example&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This blog post is not a detailed step by step tutorial, but rather points out the in my opinion important steps to understand how to get a Go app running in the App Cloud with a MongoDB backend. I strongly suggest to read the above linked blog posts as well, as they help to get a better overall understanding.&lt;br&gt;
+The full working example could be found in my &lt;a href="https://github.com/breml/appcloud" target="_blank"&gt;Github repository&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>Deploy a Go Web App to the Swisscom Application Cloud</title><link>https://breml.github.io/blog/2015/12/17/deploy-a-go-web-app-to-the-swisscom-application-cloud/</link><pubDate>Thu, 17 Dec 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/12/17/deploy-a-go-web-app-to-the-swisscom-application-cloud/</guid><description>&lt;p&gt;Inspired by the &lt;a href="https://ict.swisscom.ch/2015/11/push-your-first-node-js-app-into-the-cloud/" target="_blank"&gt;this blog post&lt;/a&gt; about the deployment of a &lt;a href="https://nodejs.org" target="_blank"&gt;node.js&lt;/a&gt; example app to the &lt;a href="http://developer.swisscom.com/" target="_blank"&gt;Swisscom Application Cloud&lt;/a&gt;, I decided to test the Swisscom Application Cloud my self with a similar app, written in Google &lt;a href="https://golang.org" target="_blank"&gt;Go&lt;/a&gt; language.&lt;/p&gt;
+&lt;p&gt;This blog should take you through the essential steps on a Linux based system to push your own Go based app to a &lt;a href="https://www.cloudfoundry.org" target="_blank"&gt;Cloud Foundry&lt;/a&gt; based app cloud, for example the one from Swisscom.&lt;/p&gt;
+&lt;h2 id="preparations"&gt;Preparations&lt;/h2&gt;
+&lt;h3 id="go-development-environment"&gt;Go development environment&lt;/h3&gt;
+&lt;p&gt;I assume you already have a prepared Go development environment. Otherwise I suggest you to start with the &lt;a href="https://golang.org/doc/install" target="_blank"&gt;Getting Started&lt;/a&gt; manual.&lt;/p&gt;</description></item><item><title>Tagging of dynamically added Fields in Elasticsearch</title><link>https://breml.github.io/blog/2015/10/28/tagging-of-dynamically-added-fields-in-elasticsearch/</link><pubDate>Wed, 28 Oct 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/10/28/tagging-of-dynamically-added-fields-in-elasticsearch/</guid><description>&lt;p&gt;At work we use the ELK Stack (Elasticsearch, Logstash and Kibana) to process, store and visualize all kind of log data. To get the most out of the information stored in Elasticsearch, we maintain a handcrafted Elasticsearch mapping.&lt;/p&gt;
+&lt;p&gt;As we are in the process of continuously adding more and more log sources, now and then our Elasticsearch mapping is not complete. In this case the dynamic mapping feature of Elasticsearch adds these new fields by it&amp;rsquo;s own.&lt;/p&gt;</description></item><item><title>Dividable without remainder</title><link>https://breml.github.io/blog/2015/10/22/dividable-without-remainder/</link><pubDate>Thu, 22 Oct 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/10/22/dividable-without-remainder/</guid><description>&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;h3 id="problem"&gt;Problem&lt;/h3&gt;
+&lt;p&gt;For a &amp;ldquo;1 in n sampling&amp;rdquo; problem I was looking for a fast way to determine, if a value &lt;em&gt;x&lt;/em&gt; (random number) is dividable by a previously known divisor &lt;em&gt;d&lt;/em&gt; (sampling rate) without remainder. So the algorithm has to result with &lt;em&gt;true&lt;/em&gt; in &lt;em&gt;1&lt;/em&gt; of &lt;em&gt;d&lt;/em&gt; cases, otherwise with &lt;em&gt;false&lt;/em&gt;. &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;d&lt;/em&gt; are both unsigned integers, in my case 32 bit long. Since the algorithm will be used for sampling and &lt;em&gt;x&lt;/em&gt; is produced by a random number generator (see below: Motivation), a slight inaccuracy (&amp;lt; 0.01%) may be tolerable. The usual range for &lt;em&gt;d&lt;/em&gt; will be whole numbers between 1 and 2000, based on the recommendations for &lt;a href="http://blog.sflow.com/2009/06/sampling-rates.html" target="_blank"&gt;sFlow sampling rates&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>gogitignore</title><link>https://breml.github.io/blog/2015/10/06/gogitignore/</link><pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/blog/2015/10/06/gogitignore/</guid><description>&lt;p&gt;The other day I extended one of my go (golang) project with some new main packages resulting in new commands. After building the project with &lt;code&gt;go build&lt;/code&gt; the resulting executables are placed in the respective directories within the project. While updating the git repository I found it cumbersome to add all the new executables to the .gitignore-file. On linux there is unfortunately now easy way to exclude all executables within a project with a single line in .gitignore.&lt;/p&gt;</description></item><item><title>License</title><link>https://breml.github.io/license/</link><pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate><guid>https://breml.github.io/license/</guid><description>&lt;p&gt;The content of this website / blog is unless otherwise stated licensed under a &lt;a href="http://creativecommons.org/licenses/by/4.0/" target="_blank"&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;
+&lt;a href="http://creativecommons.org/licenses/by/4.0/" target="_blank"&gt;&lt;img src="https://i.creativecommons.org/l/by/4.0/80x15.png" alt="Creative Commons Attribution 4.0 International License"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="used-components"&gt;Used components&lt;/h2&gt;
+&lt;p&gt;Powered by: &lt;a href="http://gohugo.io/" target="_blank"&gt;Hugo&lt;/a&gt;: &lt;a href="https://raw.githubusercontent.com/spf13/hugo/master/LICENSE.md" target="_blank"&gt;Simple Public License (SimPL) 2.0&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Template based on: &lt;a href="https://github.com/zyro/hyde-x" target="_blank"&gt;Hyde-X&lt;/a&gt;: &lt;a href="https://raw.githubusercontent.com/zyro/hyde-x/master/LICENSE" target="_blank"&gt;MIT License&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Source code highlighting: &lt;a href="https://highlightjs.org/" target="_blank"&gt;highlightjs&lt;/a&gt;: &lt;a href="https://raw.githubusercontent.com/isagalaev/highlight.js/master/LICENSE" target="_blank"&gt;License&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Emoji icons from: &lt;a href="http://www.emoji-cheat-sheet.com/" target="_blank"&gt;emoji-cheet-sheet.com&lt;/a&gt;: &lt;a href="https://raw.githubusercontent.com/arvida/emoji-cheat-sheet.com/master/LICENSE" target="_blank"&gt;License&lt;/a&gt;&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/about_new/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/about_new/</guid><description>&lt;p&gt;&lt;a href="https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud" target="_blank"&gt;https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud&lt;/a&gt;
+&lt;a href="https://www.youtube.com/watch?v=REsBjdhUbWo" target="_blank"&gt;https://www.youtube.com/watch?v=REsBjdhUbWo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Update About in Blog&lt;/p&gt;
+&lt;p&gt;Update Linkedin &amp;amp; Xing Profiles&lt;/p&gt;
+&lt;p&gt;Add Blog Post about Logstash Config Parser&lt;/p&gt;
+&lt;p&gt;And so on…&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/blog-post-shave-of-tls-hand-shake-from-lambda-execution-time/</guid><description>&lt;h1 id="blog-post-shave-of-tls-hand-shake-from-lambda-execution-time"&gt;Blog Post: Shave of TLS hand shake from Lambda execution time&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;For connections to relational databases it is common to have some sort of connect command, which is used during program initialization (e.g connection pool)&lt;/li&gt;
+&lt;li&gt;But what is the equivalent for modern, rest API based services?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Does it also work with Slack connection?&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/integration-tests-env-var/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/integration-tests-env-var/</guid><description>&lt;p&gt;Wieso env var&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;better compatibility with most ide, because in most cases support for build tags is not great and they can confuse auto suggestion, etc.&lt;/li&gt;
+&lt;li&gt;also other static code analysis tools like linters might have problems or not able to process the integration test files&lt;/li&gt;
+&lt;li&gt;better usage of build cache, no need to recompile packages&lt;/li&gt;
+&lt;li&gt;compatible with ./&amp;hellip;&lt;/li&gt;
+&lt;li&gt;possible to have unit tests and integration tests in the same test file&lt;/li&gt;
+&lt;li&gt;simple concept already used in other places for configuration, nothing new to learn&lt;/li&gt;
+&lt;li&gt;better compatibility with other test wrappers like go-acc for measuring coverage.&lt;/li&gt;
+&lt;li&gt;through the usage of t.skip, the test might give a hint to the user in verbose mode, how to execute the integration tests.&lt;/li&gt;
+&lt;li&gt;maybe combine with -short flag&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href="https://stackoverflow.com/questions/25965584/separating-unit-tests-and-integration-tests-in-go/25970712" target="_blank"&gt;https://stackoverflow.com/questions/25965584/separating-unit-tests-and-integration-tests-in-go/25970712&lt;/a&gt;&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/peg-in-go/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/peg-in-go/</guid><description>&lt;h1 id="peg-in-go"&gt;PEG in Go&lt;/h1&gt;
+&lt;h2 id="error-handling"&gt;Error Handling&lt;/h2&gt;
+&lt;p&gt;Error Branch with /
+Return Error
+Panic if not recoverable&lt;/p&gt;
+&lt;p&gt;Steht der Error Stack zu verfügung im Parser? Können Fehler zurückgesetzt werden?&lt;/p&gt;
+&lt;p&gt;Customized Errors zurück geben:
+Missing Keyword/Keyword expected error, Keyword in Field
+Missing closing xy (&amp;quot;, ), usw.)
+Expected Blockstart Element, usw.&lt;/p&gt;
+&lt;p&gt;Wie sind die lesbaren Rulenames nutzbar?&lt;/p&gt;</description></item><item><title>Blogs</title><link>https://breml.github.io/links/blogs/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/blogs/</guid><description>&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://catonmat.net/" target="_blank"&gt;catonmat.net&lt;/a&gt;&lt;br&gt;
+Online tools for lot of different data formats like JSON, CSV&lt;br&gt;
+One liners for awk, sed, perl, bash, etc.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://peter.bourgon.org/" target="_blank"&gt;Peter Bourgon&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dave.cheney.net/" target="_blank"&gt;Dave Cheney&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://mlafeldt.github.io/" target="_blank"&gt;Mathias Lafeldt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Go Programming Language</title><link>https://breml.github.io/links/golang/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/golang/</guid><description>&lt;h2 id="general"&gt;General&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://golang.org/" target="_blank"&gt;Official Site of the Go Programming Language&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://golang.org/pkg/" target="_blank"&gt;Go Standard Library Package Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://golang.org/doc/effective_go.html" target="_blank"&gt;Effective Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://golang.org/ref/spec" target="_blank"&gt;The Go Programming Language Specification&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://play.golang.org/" target="_blank"&gt;Go Playground&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://go.dev/" target="_blank"&gt;Go Dev&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="find-packages"&gt;Find Packages&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://pkg.go.dev/" target="_blank"&gt;Discover Go Packages (pkg.go.dev)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://awesome-go.com" target="_blank"&gt;Awesome Go&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="news--newsletter"&gt;News / Newsletter&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://golangweekly.com" target="_blank"&gt;Golang Weekly&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://changelog.com/gotime" target="_blank"&gt;Gotime&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://goatspeed.substack.com" target="_blank"&gt;GoAtSpeed&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="gems-from-go-practitioners"&gt;Gems from Go practitioners&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dave.cheney.net/practical-go" target="_blank"&gt;Practical Go&lt;/a&gt;, Dave Cheney&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://rakyll.org/style-packages/" target="_blank"&gt;Style guideline for Go packages&lt;/a&gt;, Jaana Dogan&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://talks.golang.org/2012/splash.article" target="_blank"&gt;Go at Google: Language Design in the Service of Software Engineering&lt;/a&gt;, Rob Pike&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://peter.bourgon.org/blog/" target="_blank"&gt;Blog by Peter Bourgon&lt;/a&gt;, Peter Bourgon&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="style-guides"&gt;Style Guides&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/bahlo/go-styleguide" target="_blank"&gt;bahlo Go Styleguide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://wiki.crdb.io/wiki/spaces/CRDB/pages/181371303/Go&amp;#43;coding&amp;#43;guidelines" target="_blank"&gt;Cockroach Go coding guidelines&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.gitlab.com/ee/development/go_guide/" target="_blank"&gt;Gitlab Go standards and style guidelines&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/golang/go/wiki/CodeReviewComments" target="_blank"&gt;Go Code Review Comments&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/hyperledger/fabric/blob/release-1.4/docs/source/style-guides/go-style.rst" target="_blank"&gt;Hyperledger Coding guidelines&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/boramalper/magnetico/wiki/magnetico-Design-Specification" target="_blank"&gt;magnetico Design Specification Go Programming Guidelines&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://about.sourcegraph.com/handbook/engineering/languages/go" target="_blank"&gt;Sourcegraph Go style guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/uber-go/guide/blob/master/style.md" target="_blank"&gt;Uber Go Style Guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://gds-way.cloudapps.digital/manuals/programming-languages/go.html#go-style-guide" target="_blank"&gt;UK Government Digital Service Go style guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/thanos-io/thanos/blob/master/docs/contributing/coding-style-guide.md" target="_blank"&gt;Thanos Coding Style Guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://cheatography.com/deleted-70653/cheat-sheets/golang-naming-conventions/" target="_blank"&gt;Golang Naming Conventions Cheat Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="know-how"&gt;Know-how&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://devs.cloudimmunity.com/gotchas-and-common-mistakes-in-go-golang/" target="_blank"&gt;50 Shades of Go: Traps, Gotchas, and Common Mistakes for New Golang Devs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.gopheracademy.com/advent-2014/string-matching/" target="_blank"&gt;String Matching&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.hashbangbash.com/2014/04/linking-golang-statically/" target="_blank"&gt;Linking golang statically&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.golang.org/go-slices-usage-and-internals" target="_blank"&gt;Go Slices&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://gobyexample.com/" target="_blank"&gt;Go by Example&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://quii.gitbook.io/learn-go-with-tests/meta/intro-to-generics" target="_blank"&gt;Intro to generics&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ieftimov.com/post/testing-in-go-test-doubles-by-example/" target="_blank"&gt;Testing in Go: Test Doubles by Example&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://eli.thegreenplace.net/2021/a-comprehensive-guide-to-go-generate/" target="_blank"&gt;A comprehensive guide to go generate&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bitfieldconsulting.com/golang/black-belt" target="_blank"&gt;Are you a Go black belt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="coverage"&gt;Coverage&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/wadey/gocovmerge" target="_blank"&gt;gocovmerge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.cloudflare.com/go-coverage-with-external-tests/amp/?__twitter_impression=true" target="_blank"&gt;go-coverage-with-external-tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/dave/courtney" target="_blank"&gt;Courtney - meaningful test coverage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/confluentinc/bincover" target="_blank"&gt;Bincover - measure code coverage from a binary&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="online-tools"&gt;Online Tools&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://play.golang.org/" target="_blank"&gt;The Go Playground&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://play-with-go.dev/" target="_blank"&gt;Play with Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://regoio.herokuapp.com/" target="_blank"&gt;Rego - A Go regular expression tester&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://godate.io/" target="_blank"&gt;GoDate.io - translate POSIX date format to Go date format&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/nikolaydubina/go-recipes" target="_blank"&gt;Go recipes - oneliners for to Go tooling&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="books"&gt;Books&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://miek.nl/go/" target="_blank"&gt;Learning Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://golangexample.com/20-golang-books/" target="_blank"&gt;20 Best Golang Books you should read&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="education"&gt;Education&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=sTFJtxJXkaY" target="_blank"&gt;Golang Tutorial 3 - Golang pointers explained, once and for all&lt;/a&gt; (&lt;em&gt;Video&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ueokande.github.io/go-slice-tricks/" target="_blank"&gt;Go Slice Tricks Cheat Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/inancgumus/learngo" target="_blank"&gt;LearnGo - A Large Collection of Go Examples, Exercises, and Quizzes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ardanlabs/gotraining" target="_blank"&gt;Ardanlabs Go Training&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/go-training/training" target="_blank"&gt;Go Training&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/enocom/gopher-reading-list" target="_blank"&gt;Gopher Reading List&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://fast4ward.online/posts/a-guide-to-interfaces-in-go/" target="_blank"&gt;A Guide to Interfaces in Go&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Links</title><link>https://breml.github.io/links/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/</guid><description/></item><item><title>Shell and Scripting</title><link>https://breml.github.io/links/shell/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/shell/</guid><description>&lt;h2 id="general"&gt;General&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://clig.dev/" target="_blank"&gt;Command Line Interface Guidelines&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://jvns.ca/blog/2017/03/26/bash-quirks/?imm_mid=0efb22&amp;amp;cmp=em-prog-na-na-newsltr_20170401" target="_blank"&gt;Bash scripting quirks &amp;amp; safety tips - Julia Evans&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="bash"&gt;Bash&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://betterdev.blog/minimal-safe-bash-script-template/" target="_blank"&gt;Minimal safe Bash script template&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://gist.github.com/breml/d0d6340333e2f206b52817acb0794a54" target="_blank"&gt;Github gist of script template&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="fish-shell"&gt;Fish Shell&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://fishshell.com/" target="_blank"&gt;Fish Shell&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="linting"&gt;Linting&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.shellcheck.net/" target="_blank"&gt;ShellCheck&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Template</title><link>https://breml.github.io/bits/00_template/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/bits/00_template/</guid><description>&lt;p&gt;+++
+date = &amp;ldquo;1900-01-01&amp;rdquo;
+title = &amp;ldquo;Template&amp;rdquo;
+description = &amp;quot;&amp;quot;
+categories = [ &amp;ldquo;template&amp;rdquo; ]
+draft = true
++++&lt;/p&gt;
+&lt;p&gt;script to create a bit from the template with current time stamp (to the minute)&lt;/p&gt;</description></item><item><title>Tools</title><link>https://breml.github.io/links/tools/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/links/tools/</guid><description>&lt;h2 id="cheat-sheets"&gt;Cheat Sheets&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://catonmat.net/bash-vi-editing-mode-cheat-sheet" target="_blank"&gt;Bash - Working Productively in Bash&amp;rsquo;s Vi Command Line Editing Mode (with Cheat Sheet)&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://catonmat.net/ftp/bash-vi-editing-mode-cheat-sheet.pdf" target="_blank"&gt;Readline VI Editing Mode Cheat Sheet - Default Keyboard Shortcuts for Bash&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://catonmat.net/the-definitive-guide-to-bash-command-line-history" target="_blank"&gt;Bash History - The Definitive Guide to Bash Command Line History&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://catonmat.net/ftp/bash-history-cheat-sheet.pdf" target="_blank"&gt;Bash History Cheat Sheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://education.github.com/git-cheat-sheet-education.pdf" target="_blank"&gt;Git Cheat Sheet (Github)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://help.github.com/articles/github-flavored-markdown/" target="_blank"&gt;Github flavoured Markdown&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf" target="_blank"&gt;Github flavoured Markdown Syntax&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.heise.de/mac-and-i/downloads/65/1/1/6/7/1/0/3/Markdown-CheatSheet-Deutsch.pdf" target="_blank"&gt;Markdown Syntax-Übersicht&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank"&gt;Markdown Cheatsheet (in Markdown)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://chartmogul.com/resources/slack-cheat-sheet/" target="_blank"&gt;Slack&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://tim.gremalm.se/cheat-sheet-tmux/" target="_blank"&gt;tmux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html" target="_blank"&gt;vi / vim graphical cheat sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://cdn.shopify.com/s/files/1/0165/4168/files/digital-preview-letter.png" target="_blank"&gt;vim&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://michael.peopleofhonoronly.com/vim/" target="_blank"&gt;VIM Cheat Sheet for Programmers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/vgod/vimrc#vim-visual-cheat-sheet" target="_blank"&gt;vim visual cheat sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sheet.shiar.nl/vimperator" target="_blank"&gt;Vimperator cheat sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://code.visualstudio.com/docs/getstarted/keybindings#_keyboard-shortcuts-reference" target="_blank"&gt;Visual Studio Code - Keyboard Shortcuts Reference&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://code.visualstudio.com/shortcuts/keyboard-shortcuts-linux.pdf" target="_blank"&gt;Visual Studio Code - Keyboard Shortcuts Reference for Linux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="colaboration"&gt;Colaboration&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://tmate.io/" target="_blank"&gt;tmate - Instant terminal sharing&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="documentation"&gt;Documentation&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://asciiflow.com/" target="_blank"&gt;Asciiflow - draw ascii graphics&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://mermaid-js.github.io/" target="_blank"&gt;Mermaid - represent diagrams using text and code&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://mermaid-js.github.io/mermaid-live-editor/" target="_blank"&gt;Live Editor&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="online-tools"&gt;Online Tools&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.debuggex.com/" target="_blank"&gt;Debuggex - Visual Regular Expression Debugger&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://regex101.com/" target="_blank"&gt;regular expressions 101&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://dillinger.io/" target="_blank"&gt;dillinger.io - Online Markdown Editor and Preview&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://explainshell.com/" target="_blank"&gt;Explain Shell&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/gnab/remark" target="_blank"&gt;Remark - Markdown based Slideshows&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="image-processing"&gt;Image Processing&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.irfanview.com/" target="_blank"&gt;IrfanView&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.xnview.com/en/xnviewmp/" target="_blank"&gt;XnViewMP&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="validation"&gt;Validation&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://cuelang.org/" target="_blank"&gt;cue&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://cuetorials.com/" target="_blank"&gt;cue tutorials&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="forecasting"&gt;Forecasting&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://facebook.github.io/porphet/" target="_blank"&gt;Facebook Prophet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
