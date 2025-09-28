@@ -1,0 +1,211 @@
+<!doctype html><html xmlns=http://www.w3.org/1999/xhtml xml:lang=en lang=en-us><head><link href=http://gmpg.org/xfn/11 rel=profile><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><title>Seamless Go Code Navigation in Hexagonal Architectures with VS Code &#183;</title><meta name=description content="Improve navigation in Go projects following hexagonal architecture by using a custom macro in VS Code to jump directly between handlers, services, and adapters while skipping mocks and generated code."><meta name=keywords content="Go,Golang,Go interfaces,VS Code,Visual Studio Code,Hexagonal Architecture,macro-commander,code navigation,clean architecture,developer productivity,navigation productivity,LSP,Language Server Protocol,grpc"><link rel=stylesheet href=https://breml.github.io/css/poole.css><link rel=stylesheet href=https://breml.github.io/css/hyde.css><link rel=stylesheet href=https://breml.github.io/css/poole-overrides.css><link rel=stylesheet href=https://breml.github.io/css/hyde-overrides.css><link rel=stylesheet href=https://breml.github.io/css/hyde-x.css><link rel=stylesheet href=https://breml.github.io/css/breml.css><link rel=stylesheet href=https://breml.github.io/css/highlight/sunburst.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface"><link rel=stylesheet href=//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css><link rel=apple-touch-icon-precomposed sizes=144x144 href=https://breml.github.io/touch-icon-144-precomposed.png><link href=https://breml.github.io/favicon.png rel=icon></head><body class=theme-base-0d><div class=sidebar><div class="container sidebar-sticky"><div class=sidebar-about><a href=https://breml.github.io/><img src="https://www.gravatar.com/avatar/ffc66df1e22b19865762dc6dc8129ae8?s=200" alt=gravatar><h1></h1></a><p class=lead>my thoughts about&mldr;</p></div><ul class=sidebar-nav><li class=sidebar-nav-item><a href=https://breml.github.io/>Blog</a></li><li class=sidebar-nav-item><a href=https://breml.github.io/about/>About</a></li><li class=sidebar-nav-item><a href=https://breml.github.io/links/>Links</a></li></ul><ul class=sidebar-nav><li class=sidebar-nav-item><a href=https://github.com/breml target=_blank><i class="fa fa-github-square fa-3x"></i></a>
+<a href=https://www.linkedin.com/in/lucas-bremgartner-96b477 target=_blank><i class="fa fa-linkedin-square fa-3x"></i></a>
+<a href=https://www.xing.com/profile/Lucas_Bremgartner target=_blank><i class="fa fa-xing-square fa-3x"></i></a>
+<a href type=application/rss+xml target=_blank><i class="fa fa-rss-square fa-3x"></i></a></li></ul><p>Categories:<br><a class=label href=/categories/bpf>bpf</a>
+<a class=label href=/categories/elasticsearch>elasticsearch</a>
+<a class=label href=/categories/git>git</a>
+<a class=label href=/categories/gogitignore>gogitignore</a>
+<a class=label href=/categories/golang>golang</a>
+<a class=label href=/categories/sflow>sflow</a></p><p>Copyright &copy; 2025 <a href=https://breml.github.io/license/>License</a></p></div></div><div class="content container"><div class=post><h1>Seamless Go Code Navigation in Hexagonal Architectures with VS Code</h1><span class=post-date>Sep 28, 2025<br><a class=label href=https://breml.github.io/categories/golang>golang</a></span><p>When working with Go projects that follow a <strong>hexagonal architecture</strong>, code navigation can quickly become cumbersome. Between interfaces, adapters, mocks, and middlewares, the built-in <strong>Go to Definition</strong> (<code>F12</code>) and <strong>Go to Implementations</strong> (<code>Ctrl+F12</code>) commands in Visual Studio Code force you to constantly switch mental context and manually pick the correct target.</p><p>This friction gets worse in projects where you generate mocks (e.g. with <a href=https://github.com/vektra/mockery target=_blank>mockery</a>) or wrapper code for logging and metrics. Every interface ends up with several implementations, and the navigation menu is cluttered with entries that are usually not the one you want.</p><p>To solve this, I built a <strong>macro</strong> for the <strong><a href="https://marketplace.visualstudio.com/items?itemName=jeff-hykin.macro-commander" target=_blank>macro-commander</a></strong> Visual Studio Code Extension that makes navigating Go code <strong>seamless and predictable</strong>. With this macro bound to <code>F12</code>, I can jump to the correct implementation or definition in one keystroke—without thinking about whether to use <em>definition</em> or <em>implementation</em> and without manually filtering through mocks or generated wrappers.</p><hr><h2 id=the-macro>The Macro</h2><p>Here’s the macro logic in plain JavaScript with inline comments for clarity:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#75715e>// Get all possible implementations of the symbol under the cursor.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>items</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>vscode</span>.<span style=color:#a6e22e>commands</span>.<span style=color:#a6e22e>executeCommand</span>(
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#39;vscode.executeImplementationProvider&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>vscode</span>.window.<span style=color:#a6e22e>activeTextEditor</span>.document.<span style=color:#a6e22e>uri</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>vscode</span>.window.<span style=color:#a6e22e>activeTextEditor</span>.<span style=color:#a6e22e>selection</span>.<span style=color:#a6e22e>active</span>
+</span></span><span style=display:flex><span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>items</span>.<span style=color:#a6e22e>length</span> <span style=color:#f92672>===</span> <span style=color:#ae81ff>1</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// If there’s only one implementation, jump directly to it.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>vscode</span>.<span style=color:#a6e22e>commands</span>.<span style=color:#a6e22e>executeCommand</span>(<span style=color:#e6db74>&#39;editor.action.goToImplementation&#39;</span>);
+</span></span><span style=display:flex><span>} <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>items</span>.<span style=color:#a6e22e>length</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>1</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// If there are multiple implementations, filter them.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// Filter out mocks, middlewares, and generated code (_gen.go).
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>filtered</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>items</span>.<span style=color:#a6e22e>filter</span>(<span style=color:#a6e22e>i</span> =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>i</span>.<span style=color:#a6e22e>uri</span>.<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>includes</span>(<span style=color:#e6db74>&#39;mock&#39;</span>) <span style=color:#f92672>||</span>
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>i</span>.<span style=color:#a6e22e>uri</span>.<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>includes</span>(<span style=color:#e6db74>&#39;middleware&#39;</span>) <span style=color:#f92672>||</span>
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>i</span>.<span style=color:#a6e22e>uri</span>.<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>includes</span>(<span style=color:#e6db74>&#39;_gen&#39;</span>)
+</span></span><span style=display:flex><span>    ) {
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>  });
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>filtered</span>.<span style=color:#a6e22e>length</span> <span style=color:#f92672>===</span> <span style=color:#ae81ff>1</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// If only one candidate remains after filtering, open it directly.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>doc</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>vscode</span>.<span style=color:#a6e22e>workspace</span>.<span style=color:#a6e22e>openTextDocument</span>(<span style=color:#a6e22e>filtered</span>[<span style=color:#ae81ff>0</span>].<span style=color:#a6e22e>uri</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>vscode</span>.window.<span style=color:#a6e22e>showTextDocument</span>(<span style=color:#a6e22e>doc</span>, { <span style=color:#a6e22e>selection</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>filtered</span>[<span style=color:#ae81ff>0</span>].<span style=color:#a6e22e>range</span> });
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// Otherwise, show a quick pick menu to choose from filtered results.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// This usually happens when there are multiple real implementations.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// Example: multiple adapters implementing the same interface.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// The user can then pick the desired one.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// The quick pick shows the filename and line number for clarity.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// Example label: &#34;repo.go:10&#34;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>picked</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>vscode</span>.window.<span style=color:#a6e22e>showQuickPick</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>filtered</span>.<span style=color:#a6e22e>map</span>(<span style=color:#a6e22e>i</span> =&gt; {
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>label</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>i</span>.<span style=color:#a6e22e>uri</span>.<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>split</span>(<span style=color:#e6db74>&#39;/&#39;</span>).<span style=color:#a6e22e>pop</span>() <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;:&#39;</span> <span style=color:#f92672>+</span> (<span style=color:#a6e22e>i</span>.<span style=color:#a6e22e>range</span>.<span style=color:#a6e22e>start</span>.<span style=color:#a6e22e>line</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>),
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>description</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>i</span>.<span style=color:#a6e22e>uri</span>.<span style=color:#a6e22e>path</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>item</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>i</span>
+</span></span><span style=display:flex><span>      };
+</span></span><span style=display:flex><span>    }),
+</span></span><span style=display:flex><span>    { <span style=color:#a6e22e>placeHolder</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;Multiple implementations found, please pick one&#39;</span> }
+</span></span><span style=display:flex><span>  );
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>picked</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>doc</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>vscode</span>.<span style=color:#a6e22e>workspace</span>.<span style=color:#a6e22e>openTextDocument</span>(<span style=color:#a6e22e>picked</span>.<span style=color:#a6e22e>item</span>.<span style=color:#a6e22e>uri</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>vscode</span>.window.<span style=color:#a6e22e>showTextDocument</span>(<span style=color:#a6e22e>doc</span>, { <span style=color:#a6e22e>selection</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>picked</span>.<span style=color:#a6e22e>item</span>.<span style=color:#a6e22e>range</span> });
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>} <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// Fallback: if there are no implementations, reveal the definition.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>definitions</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>vscode</span>.<span style=color:#a6e22e>commands</span>.<span style=color:#a6e22e>executeCommand</span>(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;vscode.executeDefinitionProvider&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>vscode</span>.window.<span style=color:#a6e22e>activeTextEditor</span>.document.<span style=color:#a6e22e>uri</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>vscode</span>.window.<span style=color:#a6e22e>activeTextEditor</span>.<span style=color:#a6e22e>selection</span>.<span style=color:#a6e22e>active</span>
+</span></span><span style=display:flex><span>  );
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>definitions</span>.<span style=color:#a6e22e>length</span> <span style=color:#f92672>===</span> <span style=color:#ae81ff>1</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>vscode</span>.<span style=color:#a6e22e>commands</span>.<span style=color:#a6e22e>executeCommand</span>(<span style=color:#e6db74>&#39;editor.action.revealDefinition&#39;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This filtering logic excludes mocks, middlewares, and generated files (<code>_gen.go</code>). In most cases, this leaves exactly the one implementation I care about, and I jump there directly.</p><p>If you follow a different naming pattern in your project, you can adapt the filtering logic to your needs.</p><p>Although this blog uses Go as an example, the macro itself works with any language supported by LSP in VS Code.</p><p>Let’s see how this plays out in a simple hexagonal Go project.</p><hr><h2 id=example-hexagonal-architecture-in-go>Example: Hexagonal Architecture in Go</h2><p>To see why this macro is a game-changer, let’s walk through a simple hexagonal architecture in Go.</p><p>In hexagonal architecture, the service defines interfaces for the methods it offers as well as for the functionality it requires (ports). The service API is consumed by the driving adapters (e.g. http handlers), and the service calls the driven adapters through the ports.</p><p><img src=hexagonal_architecture.png alt="Hexagonal Architecture Diagram"></p><p>I normally use the following project structure:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-plain data-lang=plain><span style=display:flex><span>/
+</span></span><span style=display:flex><span>├── cmd
+</span></span><span style=display:flex><span>│   └── myapp
+</span></span><span style=display:flex><span>│       └── main.go
+</span></span><span style=display:flex><span>└── internal
+</span></span><span style=display:flex><span>    ├── api
+</span></span><span style=display:flex><span>    │   └── myservice_handlers.go
+</span></span><span style=display:flex><span>    └── myservice
+</span></span><span style=display:flex><span>        ├── adapters
+</span></span><span style=display:flex><span>        │   ├── mock
+</span></span><span style=display:flex><span>        │   │   └── repo_gen.go (omitted for brevity)
+</span></span><span style=display:flex><span>        │   ├── middleware
+</span></span><span style=display:flex><span>        │   │   └── repo_log_gen.go (omitted for brevity)
+</span></span><span style=display:flex><span>        │   └── repo
+</span></span><span style=display:flex><span>        │       └── repo.go
+</span></span><span style=display:flex><span>        ├── mock
+</span></span><span style=display:flex><span>        │   └── service_mock_gen.go (omitted for brevity)
+</span></span><span style=display:flex><span>        ├── middleware
+</span></span><span style=display:flex><span>        │   └── service_log_gen.go (omitted for brevity)
+</span></span><span style=display:flex><span>        ├── myservice_ports.go
+</span></span><span style=display:flex><span>        └── myservice_service.go
+</span></span></code></pre></div><h3 id=service-interface-myservice_portsgo>Service Interface (<code>myservice_ports.go</code>)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>myservice</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>RepoPort</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>GetValue</span>() <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Service</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>FetchValue</span>() <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=service-implementation-myservice_servicego>Service Implementation (<code>myservice_service.go</code>)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>myservice</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>service</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>repo</span> <span style=color:#a6e22e>RepoPort</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewService</span>(<span style=color:#a6e22e>r</span> <span style=color:#a6e22e>RepoPort</span>) <span style=color:#a6e22e>Service</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>service</span>{<span style=color:#a6e22e>repo</span>: <span style=color:#a6e22e>r</span>}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>service</span>) <span style=color:#a6e22e>FetchValue</span>() <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>repo</span>.<span style=color:#a6e22e>GetValue</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=adapter-repogo>Adapter (<code>repo.go</code>)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>repo</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Repo</span> <span style=color:#66d9ef>struct</span>{}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewRepo</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>Repo</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Repo</span>{}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Repo</span>) <span style=color:#a6e22e>GetValue</span>() <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;constant-value&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=http-handler-myservice_handlersgo>HTTP Handler (<code>myservice_handlers.go</code>)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>api</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;github.com/example/myapp/internal/myservice&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>serviceMiddleware</span> <span style=color:#e6db74>&#34;github.com/example/myapp/internal/myservice/middleware&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;github.com/example/myapp/internal/myservice/adapters/repo&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>adapterMiddleware</span> <span style=color:#e6db74>&#34;github.com/example/myapp/internal/myservice/adapters/middleware&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewHandler</span>() <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandlerFunc</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>repo</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>repo</span>.<span style=color:#a6e22e>NewRepo</span>()
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>repoWithLogging</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>adapterMiddleware</span>.<span style=color:#a6e22e>NewRepoWithLogging</span>(<span style=color:#a6e22e>repo</span>) <span style=color:#75715e>// wrapped with logging middleware</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>svc</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>myservice</span>.<span style=color:#a6e22e>NewService</span>(<span style=color:#a6e22e>repoWithLogging</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>svcWithLogging</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>serviceMiddleware</span>.<span style=color:#a6e22e>NewServiceWithLogging</span>(<span style=color:#a6e22e>svc</span>) <span style=color:#75715e>// wrapped with logging middleware</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>req</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>value</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>svcWithLogging</span>.<span style=color:#a6e22e>FetchValue</span>()
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Fprintln</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>value</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=main-maingo>Main (<code>main.go</code>)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;github.com/example/myapp/internal/api&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handle</span>(<span style=color:#e6db74>&#34;/value&#34;</span>, <span style=color:#a6e22e>api</span>.<span style=color:#a6e22e>NewHandler</span>())
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>, <span style=color:#66d9ef>nil</span>))
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><hr><h2 id=navigation-without-the-macro>Navigation Without the Macro</h2><ul><li>From <code>myservice_handlers.go</code>, pressing <code>F12</code> on <code>FetchValue</code> takes you to the <strong>interface</strong>, not the implementation.</li><li>From the service, pressing <code>Ctrl+F12</code> shows <strong>several adapters</strong> (repo, mocks, middlewares, etc.), and you need to pick the right one manually.</li></ul><p>This gets old fast.</p><hr><h2 id=navigation-with-the-macro>Navigation With the Macro</h2><ul><li>From the handler → jump directly to the service implementation.</li><li>From the service → jump directly to the correct adapter (skipping mocks and wrappers).</li></ul><p>No mental overhead. No extra keystrokes. Just smooth navigation.</p><hr><h2 id=get-started>Get Started</h2><ol><li>Install the <a href="https://marketplace.visualstudio.com/items?itemName=jeff-hykin.macro-commander" target=_blank>macro-commander</a> extension in Visual Studio Code.</li><li>Define the macro in your <code>settings.json</code> file as shown below.</li><li>Bind the macro to <code>F12</code> (or your preferred key) in your keybindings.</li></ol><h3 id=settingsjson-configuration>settings.json Configuration</h3><p>Below is the complete macro definition, ready to be copied into your <code>settings.json</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-jsonc data-lang=jsonc><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;macros&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;gotoPreferredImplementation&#34;</span>: [
+</span></span><span style=display:flex><span>      {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;javascript&#34;</span>: [
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;const items = await vscode.commands.executeCommand(&#39;vscode.executeImplementationProvider&#39;, vscode.window.activeTextEditor.document.uri, vscode.window.activeTextEditor.selection.active);&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;if (items.length === 1) {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  await vscode.commands.executeCommand(&#39;editor.action.goToImplementation&#39;);&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;} else if (items.length &gt; 1) {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  const filtered = items.filter(i =&gt; {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    if (i.uri.path.includes(&#39;mock&#39;) || i.uri.path.includes(&#39;middleware&#39;) || i.uri.path.includes(&#39;_gen&#39;)) {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;      return false;&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    }&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    return true;&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  });&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  if (filtered.length === 1) {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    const doc = await vscode.workspace.openTextDocument(filtered[0].uri);&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    await vscode.window.showTextDocument(doc, { selection: filtered[0].range });&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    return;&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  }&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  const picked = await vscode.window.showQuickPick(filtered.map(i =&gt; {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    return {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;      label: i.uri.path.split(&#39;/&#39;).pop() + &#39;:&#39; + (i.range.start.line + 1),&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;      description: i.uri.path,&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;      item: i&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    };&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  }), { placeHolder: &#39;Multiple implementations found, please pick one&#39; });&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  if (picked) {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    const doc = await vscode.workspace.openTextDocument(picked.item.uri);&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    await vscode.window.showTextDocument(doc, { selection: picked.item.range });&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  }&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;} else {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  const definitions = await vscode.commands.executeCommand(&#39;vscode.executeDefinitionProvider&#39;, vscode.window.activeTextEditor.document.uri, vscode.window.activeTextEditor.selection.active);&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  if (definitions.length === 1) {&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;    await vscode.commands.executeCommand(&#39;editor.action.revealDefinition&#39;);&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;  }&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#e6db74>&#34;}&#34;</span>
+</span></span><span style=display:flex><span>        ]
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    ]
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=setting-up-the-keybinding>Setting up the Keybinding</h3><p>Once you’ve defined the macro, bind it to <code>F12</code> (or your preferred key) by adding the following to your <code>keybindings.json</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-jsonc data-lang=jsonc><span style=display:flex><span>[
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;key&#34;</span>: <span style=color:#e6db74>&#34;f12&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;command&#34;</span>: <span style=color:#e6db74>&#34;macros.gotoPreferredImplementation&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;when&#34;</span>: <span style=color:#e6db74>&#34;editorHasDefinitionProvider &amp;&amp; editorTextFocus &amp;&amp; !isInEmbeddedEditor&#34;</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>]
+</span></span></code></pre></div><p>Be aware, that this overwrites the default <code>Go to Definition</code> command, if you stick to <code>F12</code>. But this is not a problem, since the macro unifies both definition and implementation jumps into a single shortcut.</p><hr><h2 id=wrap-up>Wrap-up</h2><p>By combining <a href="https://marketplace.visualstudio.com/items?itemName=jeff-hykin.macro-commander" target=_blank>macro-commander</a> (<a href=https://github.com/jeff-hykin/macro-commander target=_blank>Github</a>) with the LSP functionality provided by the standard <a href="https://marketplace.visualstudio.com/items?itemName=golang.go" target=_blank>Go extension</a>, along with some simple filtering, you can make code navigation in VS Code <strong>fit your architecture and workflow</strong>. For me, working with Go and hexagonal architectures, this means I can move seamlessly between handlers, services, and adapters without getting lost in generated code.</p><p>If your project follows different patterns (e.g., other naming conventions for generated files) or if you are using for example <a href=https://grpc.io/ target=_blank>gRPC</a>, just tweak the filtering logic to match. The concept remains the same: make navigation work for <em>your codebase</em>, not the other way around.</p><p>Happy coding! 🚀</p></div></div><script src=https://breml.github.io/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad()</script><script>var _gaq=[["_setAccount","UA-68498959-1"],["_trackPageview"]];(function(e,t){var n=e.createElement(t),s=e.getElementsByTagName(t)[0];n.src=("https:"==location.protocol?"//ssl":"//www")+".google-analytics.com/ga.js",s.parentNode.insertBefore(n,s)})(document,"script")</script></body></html>
