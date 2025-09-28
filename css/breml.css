@@ -36,3 +36,11 @@
 .hljs {
   white-space: pre;
 }
+
+#bluesky svg {
+  width: 51px;
+  height: 60px;
+  vertical-align: bottom;
+  margin-bottom: 2px;
+  filter: invert(1);
+}
