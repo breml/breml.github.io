@@ -37,7 +37,8 @@ The full working example could be found in my &lt;a href="https://github.com/bre
 &lt;p&gt;Powered by: &lt;a href="http://gohugo.io/" target="_blank"&gt;Hugo&lt;/a&gt;: &lt;a href="https://raw.githubusercontent.com/spf13/hugo/master/LICENSE.md" target="_blank"&gt;Simple Public License (SimPL) 2.0&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Template based on: &lt;a href="https://github.com/zyro/hyde-x" target="_blank"&gt;Hyde-X&lt;/a&gt;: &lt;a href="https://raw.githubusercontent.com/zyro/hyde-x/master/LICENSE" target="_blank"&gt;MIT License&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Source code highlighting: &lt;a href="https://highlightjs.org/" target="_blank"&gt;highlightjs&lt;/a&gt;: &lt;a href="https://raw.githubusercontent.com/isagalaev/highlight.js/master/LICENSE" target="_blank"&gt;License&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Emoji icons from: &lt;a href="http://www.emoji-cheat-sheet.com/" target="_blank"&gt;emoji-cheet-sheet.com&lt;/a&gt;: &lt;a href="https://raw.githubusercontent.com/arvida/emoji-cheat-sheet.com/master/LICENSE" target="_blank"&gt;License&lt;/a&gt;&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/about_new/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/about_new/</guid><description>&lt;p&gt;&lt;a href="https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud" target="_blank"&gt;https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud&lt;/a&gt;
+&lt;p&gt;Emoji icons from: &lt;a href="http://www.emoji-cheat-sheet.com/" target="_blank"&gt;emoji-cheet-sheet.com&lt;/a&gt;: &lt;a href="https://raw.githubusercontent.com/arvida/emoji-cheat-sheet.com/master/LICENSE" target="_blank"&gt;License&lt;/a&gt;&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/about_new/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/about_new/</guid><description>&lt;h1 id="about"&gt;About&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud" target="_blank"&gt;https://www.slideshare.net/breml/elastic-stack-swisscom-application-cloud&lt;/a&gt;
 &lt;a href="https://www.youtube.com/watch?v=REsBjdhUbWo" target="_blank"&gt;https://www.youtube.com/watch?v=REsBjdhUbWo&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Update About in Blog&lt;/p&gt;
 &lt;p&gt;Update Linkedin &amp;amp; Xing Profiles&lt;/p&gt;
@@ -47,7 +48,8 @@ The full working example could be found in my &lt;a href="https://github.com/bre
 &lt;li&gt;For connections to relational databases it is common to have some sort of connect command, which is used during program initialization (e.g connection pool)&lt;/li&gt;
 &lt;li&gt;But what is the equivalent for modern, rest API based services?&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Does it also work with Slack connection?&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/integration-tests-env-var/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/integration-tests-env-var/</guid><description>&lt;p&gt;Wieso env var&lt;/p&gt;
+&lt;p&gt;Does it also work with Slack connection?&lt;/p&gt;</description></item><item><title/><link>https://breml.github.io/drafts/integration-tests-env-var/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://breml.github.io/drafts/integration-tests-env-var/</guid><description>&lt;h1 id="integration-tests-with-environment-variables"&gt;Integration Tests with Environment Variables&lt;/h1&gt;
+&lt;p&gt;Wieso env var&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;better compatibility with most ide, because in most cases support for build tags is not great and they can confuse auto suggestion, etc.&lt;/li&gt;
 &lt;li&gt;also other static code analysis tools like linters might have problems or not able to process the integration test files&lt;/li&gt;
